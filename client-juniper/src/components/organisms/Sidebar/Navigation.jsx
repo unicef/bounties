@@ -115,6 +115,9 @@ const useStyles = makeStyles((theme) => ({
 
 const BountiesListItem = withStyles((theme) => ({
   root: {
+    marginTop: 8,
+    marginBottom: 8,
+    height: 36,
     transition: ".3s",
     "&:hover": {
       color: "#ffffff",
