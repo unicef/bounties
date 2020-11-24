@@ -64,7 +64,7 @@ export default function UserActivity({ title, heading }) {
       <Grid container className={classes.root}>
         <Grid item xs={12}>
           <h5 className={classes.heading}>
-            Below is an activity log of all the user actions on Juniper
+            Below is an activity log of all the user actions on Bounties
           </h5>
           <ActivityList data={activities} />
         </Grid>

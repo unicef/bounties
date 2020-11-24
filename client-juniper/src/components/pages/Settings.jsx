@@ -94,7 +94,7 @@ export default function Settings({
               User Management
             </h5>
             <h5 className={classes.subtitle}>
-              You are an admin user of Juniper and have the permissions to add
+              You are an admin user of Bounties and have the permissions to add
               or remove other users. New users that are added get invited
               through an email link.
             </h5>

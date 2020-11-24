@@ -6,17 +6,13 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import WalletsIcon from "../../atoms/Icons/WalletsIcon";
-import AccountsIcon from "../../atoms/Icons/AccountsIcon";
-import PriceTrackerIcon from "../../atoms/Icons/PriceTrackerIcon";
-import TransactionsIcon from "../../atoms/Icons/TransactionsIcon";
-import USDIcon from "../../atoms/Icons/USDIcon";
-import SettingsIcon from "@material-ui/icons/Settings";
-import { usdFormatter } from "../../../util";
-import TextButton from "../../atoms/Button/TextIcon";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import PriceModal from "../../organisms/PriceModal";
 import Divider from "@material-ui/core/Divider";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListAlt } from "@fortawesome/free-regular-svg-icons";
+import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -30,16 +26,17 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 40,
   },
   navIcon: {
+    fontSize: 21,
     width: "1.5em",
     color: "#888888",
   },
   navIconSelected: {
+    fontSize: 21,
     width: "1.5em",
     color: "#ffffff",
   },
   navText: {
-    color: "#888888",
-    paddingLeft: 16,
+    paddingLeft: 8,
     fontSize: 16,
     fontWeight: 400,
     fontStretch: "normal",
@@ -50,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   navTextSelected: {
     color: "#ffffff",
-    paddingLeft: 16,
+    paddingLeft: 8,
     fontSize: 16,
     fontWeight: 400,
     fontStretch: "normal",
@@ -59,10 +56,25 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: 0,
     textAlign: "left",
   },
+  tosText: {
+    color: "#888888",
+    paddingLeft: 16,
+    fontSize: 14,
+    fontWeight: 400,
+    fontStretch: "normal",
+    fontStyle: "normal",
+    lineHeight: "normal",
+    letterSpacing: 0,
+    textAlign: "left",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
   navLink: {
     height: 55,
     paddingLeft: 20,
-    color: "#ffffff",
+
+    borderLeft: "solid 4px #2f2b36",
   },
   navLinkSelected: {
     height: 55,
@@ -75,9 +87,15 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: "none",
-
+    color: "#888888",
     "&:first-child": {
       marginTop: 16,
+    },
+  },
+  linkBottom: {
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline",
     },
   },
   priceHeader: {
@@ -95,17 +113,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const JuniperListItem = withStyles((theme) => ({
+const BountiesListItem = withStyles((theme) => ({
   root: {
-    "&$selected": {
-      color: theme.palette.primary.main,
-
-      "&:hover": {
-        color: "#ffffff",
-      },
-    },
+    transition: ".3s",
     "&:hover": {
       color: "#ffffff",
+      "& svg": {
+        color: "#ffffff",
+      },
     },
   },
   selected: {},
@@ -125,7 +140,7 @@ export default function SidebarNavigation(props) {
       className={classes.list}
     >
       <Link to={"/admin/wallets"} className={classes.link}>
-        <JuniperListItem
+        <BountiesListItem
           button
           selected={props.pageIndex === 0}
           onClick={(event) => handleListItemClick(event, 0)}
@@ -134,7 +149,9 @@ export default function SidebarNavigation(props) {
           }
         >
           <ListItemIcon className={classes.listItem}>
-            <WalletsIcon
+            <FontAwesomeIcon
+              icon={faListAlt}
+              color="inherit"
               className={
                 props.pageIndex === 0
                   ? classes.navIconSelected
@@ -155,10 +172,10 @@ export default function SidebarNavigation(props) {
               </Typography>
             }
           />
-        </JuniperListItem>
+        </BountiesListItem>
       </Link>
       <Link to={"/admin/accounts"} className={classes.link}>
-        <JuniperListItem
+        <BountiesListItem
           button
           selected={props.pageIndex === 1}
           onClick={(event) => handleListItemClick(event, 1)}
@@ -167,7 +184,8 @@ export default function SidebarNavigation(props) {
           }
         >
           <ListItemIcon className={classes.listItem}>
-            <AccountsIcon
+            <FontAwesomeIcon
+              icon={faTachometerAlt}
               className={
                 props.pageIndex === 1
                   ? classes.navIconSelected
@@ -177,22 +195,32 @@ export default function SidebarNavigation(props) {
           </ListItemIcon>
           <ListItemText
             primary={
-              <Typography className={classes.navText}>Dashboard</Typography>
+              <Typography
+                className={
+                  props.pageIndex === 1
+                    ? classes.navTextSelected
+                    : classes.navText
+                }
+              >
+                Dashboard
+              </Typography>
             }
           />
-        </JuniperListItem>
+        </BountiesListItem>
       </Link>
       <Link to={"/admin/tracker"} className={classes.link}>
-        <JuniperListItem
+        <BountiesListItem
           button
           selected={props.pageIndex === 2}
           onClick={(event) => handleListItemClick(event, 2)}
           className={
             props.pageIndex === 2 ? classes.navLinkSelected : classes.navLink
           }
+          disableRipple={true}
         >
           <ListItemIcon className={classes.listItem}>
-            <PriceTrackerIcon
+            <FontAwesomeIcon
+              icon={faTrophy}
               className={
                 props.pageIndex === 2
                   ? classes.navIconSelected
@@ -202,17 +230,25 @@ export default function SidebarNavigation(props) {
           </ListItemIcon>
           <ListItemText
             primary={
-              <Typography className={classes.navText}>Leaderboard</Typography>
+              <Typography
+                className={
+                  props.pageIndex === 2
+                    ? classes.navTextSelected
+                    : classes.navText
+                }
+              >
+                Leaderboard
+              </Typography>
             }
           />
-        </JuniperListItem>
+        </BountiesListItem>
       </Link>
       <Link
         to={"/admin/transactions"}
         className={classes.link}
         style={{ flex: 2 }}
       >
-        <JuniperListItem
+        <BountiesListItem
           button
           selected={props.pageIndex === 3}
           onClick={(event) => handleListItemClick(event, 3)}
@@ -221,7 +257,8 @@ export default function SidebarNavigation(props) {
           }
         >
           <ListItemIcon className={classes.listItem}>
-            <TransactionsIcon
+            <FontAwesomeIcon
+              icon={faUser}
               className={
                 props.pageIndex === 3
                   ? classes.navIconSelected
@@ -231,29 +268,49 @@ export default function SidebarNavigation(props) {
           </ListItemIcon>
           <ListItemText
             primary={
-              <Typography className={classes.navText}>Profile</Typography>
+              <Typography
+                className={
+                  props.pageIndex === 3
+                    ? classes.navTextSelected
+                    : classes.navText
+                }
+              >
+                Profile
+              </Typography>
             }
           />
-        </JuniperListItem>
+        </BountiesListItem>
       </Link>
 
-      <Divider style={{ backgroundColor: "#888888" }} />
-      <JuniperListItem className={classes.priceArea}>
-        <ListItemText
-          primary={
-            <Typography className={classes.navText}>Privacy Policy</Typography>
-          }
-        />
-      </JuniperListItem>
-      <JuniperListItem className={classes.priceArea}>
-        <ListItemText
-          primary={
-            <Typography className={classes.navText}>
-              Terms of Service
-            </Typography>
-          }
-        />
-      </JuniperListItem>
+      <Divider style={{ backgroundColor: "#888888", marginBottom: "1.6em" }} />
+      <Link to={"/privacy"} className={classes.linkBottom}>
+        <BountiesListItem
+          className={classes.priceArea}
+          onClick={(event) => handleListItemClick(event, 4)}
+        >
+          <ListItemText
+            primary={
+              <Typography className={classes.tosText}>
+                Privacy Policy
+              </Typography>
+            }
+          />
+        </BountiesListItem>
+      </Link>
+      <Link to={"/tos"} className={classes.linkBottom}>
+        <BountiesListItem
+          className={classes.priceArea}
+          onClick={(event) => handleListItemClick(event, 5)}
+        >
+          <ListItemText
+            primary={
+              <Typography className={classes.tosText}>
+                Terms of Service
+              </Typography>
+            }
+          />
+        </BountiesListItem>
+      </Link>
     </List>
   );
 }

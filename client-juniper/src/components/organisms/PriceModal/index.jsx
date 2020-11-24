@@ -94,7 +94,7 @@ export default function PriceModal({ open, setOpen, children }) {
             Cryptocurrency <PriceIcon className={classes.priceIcon} /> USD price
           </h3>
           <p className={classes.info}>
-            Average USD price being dislayed on Juniper is a simple average of
+            Average USD price being dislayed on Bounties is a simple average of
             Bitcoin and Ether prices across three cryotoexchanges. The price is
             calculated each day at 12:01 pm (EST)
           </p>

@@ -129,7 +129,7 @@ export default function ActivityList({ user, updateUser, title, heading }) {
                 <Grid item xs={10}>
                   <h5 className={classes.heading}>
                     Notify me via email if any of the below actions are made on
-                    Juniper
+                    Bounties
                   </h5>
                 </Grid>
                 <Grid item xs={2} className={classes.toggle}>

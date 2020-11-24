@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function JuniperAdmin() {
+export default function BountiesAdmin() {
   const classes = useStyles();
   const [appSettings, setAppSettings] = useState(defaultState);
   const [hasSettings, setHasSettings] = useState(false);
@@ -104,6 +104,10 @@ export default function JuniperAdmin() {
       fontWeightRegular: 400,
       fontWeightMedium: 500,
       color: "#002452",
+    },
+    MuiButtonBase: {
+      // The properties to apply
+      disableRipple: true, // No more ripple, on the whole application!
     },
   });
 

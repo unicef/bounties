@@ -294,7 +294,7 @@ export default function SignIn(props) {
   const [newPassword2, setNewPassword2] = useState("");
 
   const [subtitle, setSubtitle] = useState(
-    "Welcome to Juniper! Sign in to your account."
+    "Welcome to Bounties! Sign in to your account."
   );
 
   const login = async () => {
@@ -389,7 +389,7 @@ export default function SignIn(props) {
       setVerification("");
       setSignIn(true);
       setSubtitle(
-        "Welcome to Juniper! Your account has been successfully created."
+        "Welcome to Bounties! Your account has been successfully created."
       );
     }
   };
@@ -413,7 +413,7 @@ export default function SignIn(props) {
   const goToSignInPageClick = () => {
     resetState();
     setSignIn(true);
-    setSubtitle("Welcome to Juniper! Sign in to your account.");
+    setSubtitle("Welcome to Bounties! Sign in to your account.");
   };
 
   const showVerification = () => {
@@ -455,7 +455,7 @@ export default function SignIn(props) {
         }}
         anchor="left"
       >
-        <h1 className={classes.heading}>Juniper</h1>
+        <h1 className={classes.heading}>Bounties</h1>
         <h2
           className={classes.subtitle}
           style={signInError ? { color: "#ef6161" } : {}}

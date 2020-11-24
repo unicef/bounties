@@ -215,7 +215,7 @@ export default function ActivityList({
                           }
                           onClick={async () => {
                             copyToClipboard(
-                              `https://juniper.unicef.io/admin/signin?verification=${user.verificationCode}`
+                              `https://Bounties.unicef.io/admin/signin?verification=${user.verificationCode}`
                             );
                           }}
                         >
