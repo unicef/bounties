@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import BountiesContract from "./contracts/StandardBounties.json";
 import getWeb3 from "./getWeb3";
-
+import Layout from "./components/Layout";
 import "./App.css";
 
 class App extends Component {
@@ -22,10 +22,6 @@ class App extends Component {
         BountiesContract.abi,
         deployedNetwork && deployedNetwork.address
       );
-      const user = accounts[0];
-      console.log(accounts[0]);
-      console.log(await instance.methods.numBounties().call());
-      console.log(await instance.methods.bounties(0).call());
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({
@@ -42,7 +38,7 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
+  makeBounty = async () => {
     const { accounts, contract } = this.state;
     const user = accounts[0];
 
@@ -68,18 +64,8 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-        <button onClick={this.runExample}>click</button>
+        <Layout></Layout>
+        <button onClick={this.makeBounty}>click</button>
       </div>
     );
   }
