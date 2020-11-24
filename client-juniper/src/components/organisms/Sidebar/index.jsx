@@ -20,11 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Sidebar(props) {
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   console.log(props);
 
@@ -54,7 +49,11 @@ export default function Sidebar(props) {
           classes={{
             paper: classes.drawerPaper,
           }}
-          onClose={props.handleDrawerToggle}
+          onClose={() => {
+            if (props.setMobileOpen) {
+              props.setMobileOpen(false);
+            }
+          }}
           anchor="left"
         >
           <SidebarNavigation

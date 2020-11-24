@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,11 +10,21 @@ import TopBar from "../organisms/TopBar";
 import Sidebar from "../organisms/Sidebar";
 
 export default function Layout(props) {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
   return (
     <Fragment>
-      <TopBar />
+      <TopBar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
-      <Sidebar pageIndex={props.pageIndex} setPageIndex={props.setPageIndex} />
+      <Sidebar
+        pageIndex={props.pageIndex}
+        setPageIndex={props.setPageIndex}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
 
       <Switch>
         <Route exact path="/explorer">

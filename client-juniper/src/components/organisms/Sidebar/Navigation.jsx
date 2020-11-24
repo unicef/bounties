@@ -29,11 +29,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 21,
     width: "1.5em",
     color: "#888888",
+    transition: ".25s",
   },
   navIconSelected: {
     fontSize: 21,
     width: "1.5em",
     color: "#ffffff",
+    transition: ".25s",
   },
   navText: {
     paddingLeft: 8,
@@ -84,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
   },
   priceArea: {
     color: "#ffffff",
+    paddingLeft: 8,
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   link: {
     textDecoration: "none",
@@ -115,11 +120,13 @@ const useStyles = makeStyles((theme) => ({
 
 const BountiesListItem = withStyles((theme) => ({
   root: {
+    backgroundColor: "#2f2b36 !important",
     marginTop: 8,
     marginBottom: 8,
     height: 36,
-    transition: ".3s",
+    transition: ".25s",
     "&:hover": {
+      backgroundColor: "#2f2b36",
       color: "#ffffff",
       "& svg": {
         color: "#ffffff",
@@ -150,6 +157,7 @@ export default function SidebarNavigation(props) {
           className={
             props.pageIndex === 0 ? classes.navLinkSelected : classes.navLink
           }
+          disableRipple={true}
         >
           <ListItemIcon className={classes.listItem}>
             <FontAwesomeIcon
@@ -185,6 +193,7 @@ export default function SidebarNavigation(props) {
           className={
             props.pageIndex === 1 ? classes.navLinkSelected : classes.navLink
           }
+          disableRipple={true}
         >
           <ListItemIcon className={classes.listItem}>
             <FontAwesomeIcon
@@ -258,6 +267,7 @@ export default function SidebarNavigation(props) {
           className={
             props.pageIndex === 3 ? classes.navLinkSelected : classes.navLink
           }
+          disableRipple={true}
         >
           <ListItemIcon className={classes.listItem}>
             <FontAwesomeIcon
@@ -285,8 +295,12 @@ export default function SidebarNavigation(props) {
         </BountiesListItem>
       </Link>
 
-      <Divider style={{ backgroundColor: "#888888", marginBottom: "1.6em" }} />
-      <Link to={"/privacy"} className={classes.linkBottom}>
+      <Divider style={{ backgroundColor: "#888888", marginBottom: "1em" }} />
+      <Link
+        to={"/privacy"}
+        className={classes.linkBottom}
+        style={{ height: 38 }}
+      >
         <BountiesListItem
           className={classes.priceArea}
           onClick={(event) => handleListItemClick(event, 4)}
@@ -294,7 +308,7 @@ export default function SidebarNavigation(props) {
           <ListItemText
             primary={
               <Typography className={classes.tosText}>
-                Privacy Policy
+                Privacy policy
               </Typography>
             }
           />
@@ -308,7 +322,7 @@ export default function SidebarNavigation(props) {
           <ListItemText
             primary={
               <Typography className={classes.tosText}>
-                Terms of Service
+                Terms of service
               </Typography>
             }
           />
