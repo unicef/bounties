@@ -30,6 +30,15 @@ export default function Layout(props) {
         <Route exact path="/explorer">
           <div>explorer</div>
         </Route>
+        <Route exact path="/dashboard">
+          <div>dashboard</div>
+        </Route>
+        <Route exact path="/leaderboard">
+          <div>leaderboard</div>
+        </Route>
+        <Route exact path="/profile">
+          <div>profile</div>
+        </Route>
 
         <Redirect from="*" to="/explorer" />
       </Switch>

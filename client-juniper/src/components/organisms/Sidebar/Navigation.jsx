@@ -149,7 +149,7 @@ export default function SidebarNavigation(props) {
       aria-label="Sidebar Navigation"
       className={classes.list}
     >
-      <Link to={"/admin/wallets"} className={classes.link}>
+      <Link to={"/explorer"} className={classes.link}>
         <BountiesListItem
           button
           selected={props.pageIndex === 0}
@@ -185,7 +185,7 @@ export default function SidebarNavigation(props) {
           />
         </BountiesListItem>
       </Link>
-      <Link to={"/admin/accounts"} className={classes.link}>
+      <Link to={"/dashboard"} className={classes.link}>
         <BountiesListItem
           button
           selected={props.pageIndex === 1}
@@ -220,7 +220,7 @@ export default function SidebarNavigation(props) {
           />
         </BountiesListItem>
       </Link>
-      <Link to={"/admin/tracker"} className={classes.link}>
+      <Link to={"/leaderboard"} className={classes.link}>
         <BountiesListItem
           button
           selected={props.pageIndex === 2}
@@ -255,11 +255,7 @@ export default function SidebarNavigation(props) {
           />
         </BountiesListItem>
       </Link>
-      <Link
-        to={"/admin/transactions"}
-        className={classes.link}
-        style={{ flex: 2 }}
-      >
+      <Link to={"/profile"} className={classes.link} style={{ flex: 2 }}>
         <BountiesListItem
           button
           selected={props.pageIndex === 3}

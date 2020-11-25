@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import Avatar from "@material-ui/core/Avatar";
 import icon from "./unicef-logo.png";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 
@@ -75,17 +75,19 @@ export default function TopBar(props) {
         <FontAwesomeIcon
           icon={faBell}
           color="inherit"
-          size="2x"
           className={
             props.pageIndex === 0 ? classes.navIconSelected : classes.navIcon
           }
           style={{
             transform: "rotate(25deg)",
             marginRight: 24,
+            fontSize: 20,
             color: "#868e9c",
           }}
         />
-        <Avatar alt="User Name" src={null} className={classes.avatar} />
+        <Link to="/profile">
+          <Avatar alt="User Name" src={null} className={classes.avatar} />
+        </Link>
       </Toolbar>
     </AppBar>
   );
