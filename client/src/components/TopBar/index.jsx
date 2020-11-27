@@ -77,18 +77,16 @@ const useStyles = makeStyles((theme) => ({
 export default function TopBar(props) {
   const classes = useStyles();
   const { networkId, web3, initWeb3 } = useContext(EthereumContext);
-  console.log(web3);
-  console.log(web3);
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
-        <Hidden xsDown implementation="css" className={classes.hidden}>
+        <Hidden smDown implementation="css" className={classes.hidden}>
           <div className={classes.icon}>
             <img src={icon} className={classes.iconImage} />
           </div>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Chip
             className={classes.network}
             variant="outlined"
@@ -98,7 +96,7 @@ export default function TopBar(props) {
           />
         </Hidden>
         <div className={classes.title}>
-          <Hidden smUp implementation="css">
+          <Hidden mdUp implementation="css">
             <IconButton
               onClick={() => {
                 if (props.setMobileOpen) {

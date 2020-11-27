@@ -10,10 +10,11 @@ import TopBar from "../TopBar";
 import Sidebar from "../Sidebar";
 import Main from "./Main";
 import Explorer from "../Explorer";
+import Profile from "../Profile";
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  console.log("layout");
+
   return (
     <Fragment>
       <TopBar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
@@ -38,7 +39,9 @@ export default function Layout(props) {
           <div>leaderboard</div>
         </Route>
         <Route exact path="/profile">
-          <div>profile</div>
+          <Main>
+            <Profile />
+          </Main>
         </Route>
 
         <Redirect from="*" to="/explorer" />

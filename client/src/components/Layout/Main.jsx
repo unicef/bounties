@@ -3,9 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100%",
+    height: "100vh",
     width: "100%",
-    marginTop: "4rem",
+    paddingTop: "4rem",
+    overflowY: "auto",
   },
 }));
 export default function Main(props) {

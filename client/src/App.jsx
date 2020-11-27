@@ -9,6 +9,8 @@ import Layout from "./components/Layout";
 import getWeb3 from "./getWeb3";
 import EthereumContext from "./context/EthereumContext";
 
+const sidebarPaths = ["/explorer", "/dashboard", "leaderboard", "/profile"];
+
 const defaultState = {
   logoUrl: "/image/1601918615229-UNICEF.png",
   primaryColor: "#ffffff",
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function BountiesAdmin() {
   const classes = useStyles();
   const [appSettings, setAppSettings] = useState(defaultState);
-  const [pageIndex, setPageIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(null);
   const [networkId, setNetworkId] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
@@ -66,7 +68,6 @@ export default function BountiesAdmin() {
   });
 
   const initWeb3 = async () => {
-    console.log("initWeb3");
     try {
       // Get network provider and web3 instance.
 
@@ -85,6 +86,8 @@ export default function BountiesAdmin() {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
+      console.log("instance.methods");
+      console.log(instance.methods);
 
       setNetworkId(networkId);
       setWeb3(web3);
@@ -99,7 +102,14 @@ export default function BountiesAdmin() {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    sidebarPaths.forEach((path, index) => {
+      const pathname = window.location.pathname;
+      if (pathname.indexOf(path) >= 0) {
+        setPageIndex(index);
+      }
+    });
+  }, []);
 
   return (
     <div className={classes.root}>

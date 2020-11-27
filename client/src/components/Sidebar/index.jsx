@@ -23,7 +23,7 @@ export default function Sidebar(props) {
 
   return (
     <Fragment>
-      <Hidden xsDown implementation="css">
+      <Hidden smDown implementation="css">
         <Drawer
           className={classes.drawer}
           variant="permanent"
@@ -38,7 +38,7 @@ export default function Sidebar(props) {
           />
         </Drawer>
       </Hidden>
-      <Hidden smUp implementation="css">
+      <Hidden mdUp implementation="css">
         <Drawer
           className={classes.drawer}
           variant="temporary"

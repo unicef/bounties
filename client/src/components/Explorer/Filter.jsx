@@ -26,10 +26,10 @@ export default function Sidebar(props) {
 
   return (
     <Fragment>
-      <Hidden xsDown implementation="css" className={classes.filters}>
+      <Hidden smDown implementation="css" className={classes.filters}>
         <div>Filters</div>
       </Hidden>
-      <Hidden smUp implementation="css">
+      <Hidden mdUp implementation="css">
         <Drawer
           className={classes.drawer}
           variant="temporary"

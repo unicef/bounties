@@ -24,7 +24,7 @@ export default function Explorer(props) {
 
   return (
     <div className={classes.container}>
-      <Hidden xsDown implementation="css">
+      <Hidden smDown implementation="css">
         <div className={`${classes.filters}`}>
           <Filter filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
         </div>
