@@ -24,7 +24,7 @@ const defaultState = {
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#f2f4f8",
     height: "100%",
     width: "100%",
   },
@@ -48,6 +48,9 @@ export default function BountiesAdmin() {
         containedHover: appSettings.containedButtonHover,
         containedActive: appSettings.containedButtonActive,
         textHover: appSettings.textButtonHover,
+      },
+      secondary: {
+        main: "#4d94ff",
       },
       background: {
         default: "#ffffff",
