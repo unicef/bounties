@@ -53828,9 +53828,440 @@
     "name": "solc",
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {
+        "0xd54885079d7edd9bea77e3f09e83bd65a121db3d3a14892227e0d2cffe73970f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_fulfiller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            }
+          ],
+          "name": "ActionPerformed",
+          "type": "event"
+        },
+        "0x43a4e4542993b08827123085341d156186f40b28b6343f301c246a1d5f49d9f7": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_changer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address[]",
+              "name": "_approvers",
+              "type": "address[]"
+            }
+          ],
+          "name": "BountyApproversUpdated",
+          "type": "event"
+        },
+        "0x588a0d2c7e36ab3050cd6b8b12441530ae5407613e9f2a62dc10bc43a302ed9c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_changer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_issuers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_approvers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_deadline",
+              "type": "uint256"
+            }
+          ],
+          "name": "BountyChanged",
+          "type": "event"
+        },
+        "0xdc41a74d84036920901cf73075fc7f917d75b1f5dbd7955c12f9203336247233": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_changer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            }
+          ],
+          "name": "BountyDataChanged",
+          "type": "event"
+        },
+        "0x946e60a77ecf689f0595d6dcd6cf1537564a1d82472a69a3be00f7e8cb6f8b7d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_changer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_deadline",
+              "type": "uint256"
+            }
+          ],
+          "name": "BountyDeadlineChanged",
+          "type": "event"
+        },
+        "0xc9db45671da2b4994b84d56a8832d4e0bcc3722230dffce39df6886f9ec2d7d6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_issuer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "_amounts",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "BountyDrained",
+          "type": "event"
+        },
+        "0xb9fb09db36801e95ddbb658a96b7ecf81b9b7e105e4a82d8887b1e7eadd45b84": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_fulfillmentId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_fulfillers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_submitter",
+              "type": "address"
+            }
+          ],
+          "name": "BountyFulfilled",
+          "type": "event"
+        },
+        "0xeea6c8039af43860e84bc876245a0d129d92b942390135da1051b219149c100e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable",
+              "name": "_creator",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_issuers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "address[]",
+              "name": "_approvers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_deadline",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_tokenVersion",
+              "type": "uint256"
+            }
+          ],
+          "name": "BountyIssued",
+          "type": "event"
+        },
+        "0xc969620b1b90646a0d597289d87dcf90d4cc4e554bddf0c003dfc05954a6d359": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_changer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_issuers",
+              "type": "address[]"
+            }
+          ],
+          "name": "BountyIssuersUpdated",
+          "type": "event"
+        },
+        "0x7431e5e30247dcb2379eab9b0e60e49038c5ddb5cac27f27a17e950c0220a693": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_contributionId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable",
+              "name": "_contributor",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "ContributionAdded",
+          "type": "event"
+        },
+        "0xfb1da5cbf027ad18b7c1f786bf81e9920cc0db09d7e299a8e4f3dbb64ce32f01": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_contributionId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ContributionRefunded",
+          "type": "event"
+        },
+        "0xc55c552370ad68c2faed667a8224a8ab373e39368872484a40619b1e884336de": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_issuer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "_contributionIds",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "ContributionsRefunded",
+          "type": "event"
+        },
+        "0x4d54a229a804a61c5213bec479b1407ce270c57b24fd8299d6ea98b6b2ab0520": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_fulfillmentId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_approver",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "_tokenAmounts",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "FulfillmentAccepted",
+          "type": "event"
+        },
+        "0xde0d52ad68b0a792924de426fb3a2f2c1ce908be531894e35d85e533fbb8ec16": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_bountyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_fulfillmentId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address payable[]",
+              "name": "_fulfillers",
+              "type": "address[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "_data",
+              "type": "string"
+            }
+          ],
+          "name": "FulfillmentUpdated",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x81e0fdbf8FD45d957F89e0E7c006e94FC42fF9D1",
+      "transactionHash": "0x2f2a0047cfa6efce897ff5d6997b3d482cb0b5910f409523922113b7c3fa3502"
+    }
+  },
   "schemaVersion": "3.3.2",
-  "updatedAt": "2020-11-25T18:52:47.712Z",
+  "updatedAt": "2020-12-01T05:14:48.091Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Mark Beylin <mark.beylin@consensys.net>, Gonçalo Sá <goncalo.sa@consensys.net>, Kevin Owocki <kevin.owocki@consensys.net>, Ricardo Guilherme Schmidt (@3esmit), Matt Garnett <matt.garnett@consensys.net>, Craig Williams <craig.williams@consensys.net>",
     "details": "A contract for issuing bounties on Ethereum paying in ETH, ERC20, or ERC721 tokens",

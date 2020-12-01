@@ -1,20 +1,25 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
-
+import EthereumContext from "../../context/EthereumContext";
 import TopBar from "../TopBar";
 import Sidebar from "../Sidebar";
 import Main from "./Main";
+import MainBackground from "./MainBackground";
 import Explorer from "../Explorer";
 import Profile from "../Profile";
+import Login from "../Login";
+import CreateBounty from "../CreateBounty";
+import Privacy from "../Privacy";
+import TermsOfService from "../TOS";
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const { networkId, web3, initWeb3 } = useContext(EthereumContext);
   return (
     <Fragment>
       <TopBar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
@@ -36,12 +41,28 @@ export default function Layout(props) {
           <div>dashboard</div>
         </Route>
         <Route exact path="/leaderboard">
-          <div>leaderboard</div>
+          <MainBackground>
+            <div>leaderboard</div>
+          </MainBackground>
         </Route>
         <Route exact path="/profile">
-          <Main>
-            <Profile />
-          </Main>
+          <Main>{web3 ? <Profile /> : <Login />}</Main>
+        </Route>
+
+        <Route exact path="/createBounty">
+          <MainBackground>
+            {/*web3*/ true ? <CreateBounty /> : <Login />}
+          </MainBackground>
+        </Route>
+        <Route exact path="/privacy">
+          <MainBackground>
+            <Privacy />
+          </MainBackground>
+        </Route>
+        <Route exact path="/tos">
+          <MainBackground>
+            <TermsOfService />
+          </MainBackground>
         </Route>
 
         <Redirect from="*" to="/explorer" />

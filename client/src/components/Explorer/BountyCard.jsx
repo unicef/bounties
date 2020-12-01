@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
+import Divider from "@material-ui/core/Divider";
 import Hidden from "@material-ui/core/Hidden";
 import Avatar from "@material-ui/core/Avatar";
 import ExtensionOutlinedIcon from "@material-ui/icons/ExtensionOutlined";
@@ -75,7 +76,35 @@ export default function BountyCard(props) {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} md={7}>
-        <div className={classes.title}>{data.title}</div>
+        <Grid container>
+          <Grid item xs={8}>
+            <div className={classes.title}>{data.title}</div>
+          </Grid>
+          <Grid item xs={4}>
+            <Hidden smUp>
+              <div
+                style={{
+                  textAlign: "right",
+                  fontSize: "1.25rem",
+                  color: "rgb(91, 41, 199)",
+                }}
+              >
+                $100.00
+              </div>
+              <div
+                style={{
+                  textAlign: "right",
+                  color: "rgb(134, 142, 156)",
+                  fontSize: ".875rem",
+                  textTransform: "uppercase",
+                }}
+              >
+                100 Dai
+              </div>
+            </Hidden>
+          </Grid>
+        </Grid>
+
         <div style={{ minHeight: 32 }}>
           <Chip
             label="basic"
@@ -103,8 +132,21 @@ export default function BountyCard(props) {
           </span>
         </div>
       </Grid>
+      <Hidden smUp>
+        <Grid item xs={12}>
+          <div>
+            <Divider
+              style={{
+                marginTop: "1rem",
+                marginBottom: "1rem",
+                backgroundColor: "#efefef",
+              }}
+            />
+          </div>
+        </Grid>
+      </Hidden>
       <Grid item xs={12} md={4} className={classes.details}>
-        <div style={{ marginBottom: ".75rem" }}>
+        <div style={{ marginBottom: ".5rem" }}>
           <div style={{ display: "flex", clear: "both" }}>
             <span style={{ marginTop: 2, marginRight: 4 }}>
               <ExtensionOutlinedIcon fontSize="small" />
@@ -112,7 +154,7 @@ export default function BountyCard(props) {
             <B>Intermediate</B> difficulty
           </div>
         </div>
-        <div style={{ marginBottom: ".75rem" }}>
+        <div style={{ marginBottom: ".5rem" }}>
           <div style={{ display: "flex", clear: "both" }}>
             <span style={{ marginTop: 2, marginRight: 4 }}>
               <QueryBuilderIcon fontSize="small" />
@@ -130,9 +172,24 @@ export default function BountyCard(props) {
         </div>
       </Grid>
       <Hidden smDown>
-        <Grid item xs={12} md={1}>
-          <div>$100</div>
-          <div>100 Dai</div>
+        <Grid item xs={12} md={1} style={{ textAlign: "right" }}>
+          <div
+            style={{
+              fontSize: "1.56rem",
+              color: "rgb(91, 41, 199)",
+            }}
+          >
+            $100.00
+          </div>
+          <div
+            style={{
+              color: "rgb(134, 142, 156)",
+              fontSize: ".875rem",
+              textTransform: "uppercase",
+            }}
+          >
+            100 Dai
+          </div>
         </Grid>
       </Hidden>
     </Grid>

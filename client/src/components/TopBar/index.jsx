@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -72,6 +72,15 @@ const useStyles = makeStyles((theme) => ({
       color: "#ffffff",
     },
   },
+  createBountyButton: {
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+    marginRight: 22,
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
 }));
 
 export default function TopBar(props) {
@@ -91,7 +100,11 @@ export default function TopBar(props) {
             className={classes.network}
             variant="outlined"
             size="small"
-            icon={<FiberManualRecordIcon style={{ color: "#88ff88" }} />}
+            icon={
+              <FiberManualRecordIcon
+                style={{ color: web3 ? "#88ff88" : "ff8888" }}
+              />
+            }
             label={networkNames[networkId] || "Unknown Network"}
           />
         </Hidden>
@@ -114,6 +127,12 @@ export default function TopBar(props) {
           </Button>
         ) : (
           <Fragment>
+            <Link to="/createBounty" style={{ textDecoration: "none" }}>
+              <Button className={classes.createBountyButton}>
+                Create Bounty
+              </Button>
+            </Link>
+
             <FontAwesomeIcon
               icon={faBell}
               color="inherit"

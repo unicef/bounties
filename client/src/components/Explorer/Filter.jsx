@@ -66,9 +66,9 @@ const useStyles = makeStyles((theme) => ({
 function FilterForm() {
   const classes = useStyles();
   const [value, setValue] = React.useState("recent");
+
   const [platform, setState] = React.useState({
     unicef: true,
-    wfp: false,
   });
   const [stage, setStage] = React.useState({
     active: true,
@@ -95,7 +95,7 @@ function FilterForm() {
     setDifficulty({ ...difficulty, [event.target.name]: event.target.checked });
   };
 
-  const { unicef, wfp } = platform;
+  const { unicef } = platform;
   const { active, complete, expired, dead } = stage;
   const { beginner, intermediate, advanced } = difficulty;
   return (
@@ -183,17 +183,6 @@ function FilterForm() {
                 />
               }
               label="UNICEF"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={wfp}
-                  onChange={handlePlatformChange}
-                  name="wfp"
-                  style={{ padding: 4, paddingLeft: 9 }}
-                />
-              }
-              label="WFP"
             />
           </FormGroup>
         </FormControl>

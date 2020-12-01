@@ -8,6 +8,7 @@ import "./app.css";
 import Layout from "./components/Layout";
 import getWeb3 from "./getWeb3";
 import EthereumContext from "./context/EthereumContext";
+import { SnackbarProvider } from "notistack";
 
 const sidebarPaths = ["/explorer", "/dashboard", "leaderboard", "/profile"];
 
@@ -126,14 +127,22 @@ export default function BountiesAdmin() {
             accounts,
           }}
         >
-          <CssBaseline>
-            <Router>
-              <Layout
-                pageIndex={pageIndex}
-                setPageIndex={setPageIndex}
-              ></Layout>
-            </Router>
-          </CssBaseline>
+          <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <CssBaseline>
+              <Router>
+                <Layout
+                  pageIndex={pageIndex}
+                  setPageIndex={setPageIndex}
+                ></Layout>
+              </Router>
+            </CssBaseline>
+          </SnackbarProvider>
         </EthereumContext.Provider>
       </ThemeProvider>
     </div>

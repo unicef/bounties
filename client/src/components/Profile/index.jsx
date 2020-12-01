@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Login from "../Login";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -21,9 +20,5 @@ export default function Profile(props) {
   const classes = useStyles();
   const [filterOpen, setFilterOpen] = useState(false);
 
-  return (
-    <div className={classes.container}>
-      <Login />
-    </div>
-  );
+  return <div className={classes.container}></div>;
 }

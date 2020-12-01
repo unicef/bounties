@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
+import EthereumContext from "../../context/EthereumContext";
+
 const useStyles = makeStyles((theme) => ({
   login: {
     display: "flex",
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Explorer(props) {
   const classes = useStyles();
-
+  const { initWeb3 } = useContext(EthereumContext);
   return (
     <div className={classes.login}>
       <Grid container>
@@ -80,7 +81,9 @@ export default function Explorer(props) {
               If you don't wish to sign in but want to explore, feel free to
               check out some bounties using the explorer.
             </p>
-            <Button className={classes.signInButton}>Sign In</Button>
+            <Button className={classes.signInButton} onClick={initWeb3}>
+              Sign In
+            </Button>
           </Paper>
         </Grid>
       </Grid>
