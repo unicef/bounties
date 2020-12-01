@@ -148,7 +148,7 @@ export default function (props) {
     let bountyTx;
     let notificationId;
     try {
-      notificationId = enqueueSnackbar("Complete your bounty in your wallet", {
+      notificationId = enqueueSnackbar("Complete your bounty in your wallet.", {
         autoHideDuration: 3000,
       });
 
@@ -278,7 +278,7 @@ export default function (props) {
                   onChange={(e) => {
                     setFormData({
                       ...formData,
-                      description: BountyTemplate[e.target.value].template,
+                      description: e.target.value,
                     });
                   }}
                 ></textarea>
