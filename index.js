@@ -145,6 +145,12 @@ class BountiesAdmin {
 
     return await this.db.models.Bounty.find();
   }
+
+  async getBountyById(bountyId) {
+    this.logger.info(`Getting Bounty ${bountyId}`);
+
+    return await this.db.models.Bounty.find({ bountyId });
+  }
 }
 
 if (require.main === module) {

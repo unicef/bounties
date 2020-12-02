@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import TuneIcon from "@material-ui/icons/Tune";
 import BountyCard from "./BountyCard";
 import EthereumContext from "../../context/EthereumContext";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
   bountyList: {
     marginTop: "1rem",
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
   },
 }));
 
@@ -128,7 +133,11 @@ export default function ExplorerMain(props) {
       </Grid>
       <Grid item xs={12} className={classes.bountyList}>
         {displayBounties.map((bounty, index) => {
-          return <BountyCard key={index} {...bounty} />;
+          return (
+            <Link to={`/bounty/${bounty.bountyId}`} className={classes.link}>
+              <BountyCard key={index} {...bounty} />
+            </Link>
+          );
         })}
       </Grid>
     </Grid>

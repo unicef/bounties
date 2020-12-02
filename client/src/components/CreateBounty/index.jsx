@@ -19,6 +19,7 @@ import makeBounty from "../../actions/makeBounty";
 import saveBounty from "../../actions/saveBounty";
 import { useSnackbar } from "notistack";
 import Chip from "@material-ui/core/Chip";
+const Web3Utils = require("web3-utils");
 const BountyTemplate = require("./templates").template;
 
 const useStyles = makeStyles((theme) => ({
@@ -124,7 +125,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function (props) {
   const classes = useStyles();
-  const { contract, accounts, initAppData } = useContext(EthereumContext);
+  const { contract, accounts, initAppData, networkId } = useContext(
+    EthereumContext
+  );
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
@@ -173,7 +176,7 @@ export default function (props) {
         contract,
         "",
         formData.deadline,
-        formData.payAmount * 1e18
+        Web3Utils.toWei(formData.payAmount.toString())
       );
 
       const { _bountyId } = bountyTx.events.BountyIssued.returnValues;
@@ -182,7 +185,7 @@ export default function (props) {
         autoHideDuration: 3000,
       });
       // POST bounty data to backend
-      await saveBounty(formData);
+      await saveBounty({ ...formData, networkId, bountyId: _bountyId });
       await initAppData();
     } catch (e) {
       closeSnackbar(notificationId);

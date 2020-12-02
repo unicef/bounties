@@ -10,12 +10,14 @@ import TopBar from "../TopBar";
 import Sidebar from "../Sidebar";
 import Main from "./Main";
 import MainBackground from "./MainBackground";
+import BountyBackground from "./BountyBackground";
 import Explorer from "../Explorer";
 import Profile from "../Profile";
 import Login from "../Login";
 import CreateBounty from "../CreateBounty";
 import Privacy from "../Privacy";
 import TermsOfService from "../TOS";
+import BountyPage from "../BountyPage";
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -47,6 +49,11 @@ export default function Layout(props) {
         </Route>
         <Route exact path="/profile">
           <Main>{loggedIn ? <Profile /> : <Login />}</Main>
+        </Route>
+        <Route exact path="/bounty/:bountyId">
+          <BountyBackground>
+            <BountyPage />
+          </BountyBackground>
         </Route>
 
         <Route exact path="/createBounty">

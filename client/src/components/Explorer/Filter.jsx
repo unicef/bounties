@@ -269,7 +269,11 @@ function FilterForm() {
 
           <Select label="Select" value={""} style={{ width: "100%" }}>
             {categories.map((category) => {
-              return <MenuItem value={category}>{category}</MenuItem>;
+              return (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
