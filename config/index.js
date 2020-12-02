@@ -17,7 +17,7 @@ module.exports = {
   uploadLimit: oneMegabyte,
   db: {
     url: process.env.DB_URL || "mongodb://localhost",
-    database: process.env.DB_NAME || "Bounties",
+    database: process.env.DB_NAME || "bounties",
     mongooseCfg: {
       useNewUrlParser: true,
       useCreateIndex: true,

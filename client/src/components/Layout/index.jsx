@@ -19,7 +19,7 @@ import TermsOfService from "../TOS";
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { networkId, web3, initWeb3 } = useContext(EthereumContext);
+  const { networkId, loggedIn, initWeb3 } = useContext(EthereumContext);
   return (
     <Fragment>
       <TopBar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
@@ -46,12 +46,12 @@ export default function Layout(props) {
           </MainBackground>
         </Route>
         <Route exact path="/profile">
-          <Main>{web3 ? <Profile /> : <Login />}</Main>
+          <Main>{loggedIn ? <Profile /> : <Login />}</Main>
         </Route>
 
         <Route exact path="/createBounty">
           <MainBackground>
-            {/*web3*/ true ? <CreateBounty /> : <Login />}
+            {/*loggedIn*/ true ? <CreateBounty /> : <Login />}
           </MainBackground>
         </Route>
         <Route exact path="/privacy">

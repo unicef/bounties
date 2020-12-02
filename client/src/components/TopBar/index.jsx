@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopBar(props) {
   const classes = useStyles();
-  const { networkId, web3, initWeb3 } = useContext(EthereumContext);
+  const { networkId, loggedIn, initWeb3 } = useContext(EthereumContext);
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -102,7 +102,7 @@ export default function TopBar(props) {
             size="small"
             icon={
               <FiberManualRecordIcon
-                style={{ color: web3 ? "#88ff88" : "ff8888" }}
+                style={{ color: loggedIn ? "#88ff88" : "ff8888" }}
               />
             }
             label={networkNames[networkId] || "Unknown Network"}
@@ -121,7 +121,7 @@ export default function TopBar(props) {
             </IconButton>
           </Hidden>
         </div>
-        {!web3 ? (
+        {!loggedIn ? (
           <Button className={classes.signInButton} onClick={initWeb3}>
             Sign In
           </Button>

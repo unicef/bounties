@@ -16,7 +16,9 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import EthereumContext from "../../context/EthereumContext";
 import makeBounty from "../../actions/makeBounty";
+import saveBounty from "../../actions/saveBounty";
 import { useSnackbar } from "notistack";
+import Chip from "@material-ui/core/Chip";
 const BountyTemplate = require("./templates").template;
 
 const useStyles = makeStyles((theme) => ({
@@ -106,11 +108,23 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     paddingTop: "1rem",
   },
+  chip: {
+    width: "min-content",
+    height: 22,
+    marginTop: 12,
+    color: "#868e9c",
+    borderColor: "#e6e7ea",
+    "&:hover": {
+      backgroundColor: "#e6e7ea",
+      color: "#868e9c",
+      cursor: "pointer",
+    },
+  },
 }));
 
 export default function (props) {
   const classes = useStyles();
-  const { contract, accounts } = useContext(EthereumContext);
+  const { contract, accounts, initAppData } = useContext(EthereumContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
@@ -127,6 +141,7 @@ export default function (props) {
     payMethod: "eth",
     payAmount: 0,
     activate: "now",
+    categories: [],
   });
 
   const {
@@ -142,6 +157,7 @@ export default function (props) {
     payMethod,
     payAmount,
     activate,
+    categories,
   } = formData;
 
   const createBounty = async () => {
@@ -157,7 +173,7 @@ export default function (props) {
         contract,
         "",
         formData.deadline,
-        10
+        formData.payAmount * 1e18
       );
 
       const { _bountyId } = bountyTx.events.BountyIssued.returnValues;
@@ -166,6 +182,8 @@ export default function (props) {
         autoHideDuration: 3000,
       });
       // POST bounty data to backend
+      await saveBounty(formData);
+      await initAppData();
     } catch (e) {
       closeSnackbar(notificationId);
       enqueueSnackbar("There was an error sending your transaction", {
@@ -382,13 +400,43 @@ export default function (props) {
                         Bounty Category
                       </FormLabel>
 
-                      <Select
-                        label="Select"
-                        value={""}
-                        style={{ width: 280, marginTop: ".5rem" }}
-                      >
-                        <MenuItem value={0}>Option</MenuItem>
-                      </Select>
+                      <TextField
+                        color="secondary"
+                        variant="outlined"
+                        size="small"
+                        name="weblink"
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            if (categories.indexOf(e.target.value) === -1) {
+                              categories.push(e.target.value);
+                              setFormData({ ...formData, categories });
+                            }
+
+                            e.target.value = "";
+                          }
+                        }}
+                        className={classes.textfield}
+                      ></TextField>
+                      <div>
+                        {categories.map((category) => {
+                          return (
+                            <Chip
+                              key={category}
+                              label={category}
+                              variant="outlined"
+                              className={classes.chip}
+                              onClick={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  categories: categories.filter((ctg) => {
+                                    return ctg !== category;
+                                  }),
+                                });
+                              }}
+                            ></Chip>
+                          );
+                        })}
+                      </div>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>

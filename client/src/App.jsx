@@ -11,8 +11,10 @@ import EthereumContext from "./context/EthereumContext";
 import { SnackbarProvider } from "notistack";
 import getLoginToken from "./actions/getLoginToken";
 import verifyLoginToken from "./actions/verifyLoginToken";
+import getBounties from "./actions/getBounties";
 
 const ethUtil = require("ethereumjs-util");
+const sigUtil = require("eth-sig-util");
 const Eth = require("ethjs");
 const sidebarPaths = ["/explorer", "/dashboard", "leaderboard", "/profile"];
 
@@ -43,7 +45,15 @@ export default function BountiesAdmin() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [accounts, setAccounts] = useState([]);
-
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [bounties, setBounties] = useState([]);
+  const [filters, setFilters] = useState({
+    title: "",
+    sort: "recent",
+    platform: { unicef: true },
+    stage: { active: true },
+    difficulty: { beginner: true },
+  });
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -94,20 +104,22 @@ export default function BountiesAdmin() {
 
       // Login
       const token = await getLoginToken();
-
       const eth = new Eth(web3.currentProvider);
-
       const message = ethUtil.bufferToHex(
         new Buffer(`Your login nonce is: ${token}`, "utf8")
       );
       const sig = await eth.personal_sign(message, accounts[0]);
-      // send sign and token back
-      console.log(message);
-      console.log(sig);
-      console.log(await eth.personal_ecRecover(message, sig));
-      console.log(await verifyLoginToken(sig, token));
+
+      try {
+        const res = await verifyLoginToken(sig, token);
+        console.log(res);
+        console.log(res);
+      } catch (e) {
+        console.log(e);
+      }
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
+      setLoggedIn(true);
       setNetworkId(networkId);
       setWeb3(web3);
       setContract(instance);
@@ -121,6 +133,10 @@ export default function BountiesAdmin() {
     }
   };
 
+  const initAppData = async () => {
+    setBounties(await getBounties());
+  };
+
   useEffect(() => {
     sidebarPaths.forEach((path, index) => {
       const pathname = window.location.pathname;
@@ -128,6 +144,8 @@ export default function BountiesAdmin() {
         setPageIndex(index);
       }
     });
+
+    initAppData();
   }, []);
 
   return (
@@ -135,11 +153,16 @@ export default function BountiesAdmin() {
       <ThemeProvider theme={theme}>
         <EthereumContext.Provider
           value={{
+            loggedIn,
+            bounties,
             initWeb3,
             networkId,
             web3,
             contract,
             accounts,
+            filters,
+            setFilters,
+            initAppData,
           }}
         >
           <SnackbarProvider

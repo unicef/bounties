@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
@@ -17,6 +17,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import EthereumContext from "../../context/EthereumContext";
+import Chip from "@material-ui/core/Chip";
 
 const drawerWidth = 225;
 
@@ -61,11 +63,25 @@ const useStyles = makeStyles((theme) => ({
   stage: {
     marginTop: "2rem",
   },
+  chip: {
+    height: 22,
+    marginTop: 6,
+    marginBottom: 6,
+    color: "#868e9c",
+    borderColor: "#e6e7ea",
+    "&:hover": {
+      backgroundColor: "#e6e7ea",
+      color: "#868e9c",
+      cursor: "pointer",
+    },
+  },
 }));
 
 function FilterForm() {
   const classes = useStyles();
-  const [value, setValue] = React.useState("recent");
+  const [search, setSearch] = React.useState("");
+  const [sort, setSort] = React.useState("recent");
+  const { setFilters, bounties } = useContext(EthereumContext);
 
   const [platform, setState] = React.useState({
     unicef: true,
@@ -82,18 +98,67 @@ function FilterForm() {
     advanced: false,
   });
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setFilters({
+      search: event.target.value,
+      sort,
+      platform,
+      stage,
+      difficulty,
+    });
+  };
+
+  const handleSortChange = (event) => {
+    setSort(event.target.value);
+    setFilters({
+      search,
+      sort: event.target.value,
+      platform,
+      stage,
+      difficulty,
+    });
   };
   const handlePlatformChange = (event) => {
     setState({ ...platform, [event.target.name]: event.target.checked });
+    setFilters({
+      search,
+      sort,
+      platform: { ...platform, [event.target.name]: event.target.checked },
+      stage,
+      difficulty,
+    });
   };
   const handleStageChange = (event) => {
     setStage({ ...stage, [event.target.name]: event.target.checked });
+    setFilters({
+      search,
+      sort,
+      platform,
+      stage: { ...stage, [event.target.name]: event.target.checked },
+      difficulty,
+    });
   };
   const handleDifficultyChange = (event) => {
     setDifficulty({ ...difficulty, [event.target.name]: event.target.checked });
+    setFilters({
+      search,
+      sort,
+      platform,
+      stage,
+      difficulty: { ...difficulty, [event.target.name]: event.target.checked },
+    });
   };
+
+  const categoriesSet = new Set();
+
+  bounties.forEach((bounty) => {
+    bounty.categories.forEach((category) => {
+      categoriesSet.add(category);
+    });
+  });
+
+  const categories = Array.from(categoriesSet);
 
   const { unicef } = platform;
   const { active, complete, expired, dead } = stage;
@@ -106,6 +171,7 @@ function FilterForm() {
           color="secondary"
           variant="outlined"
           size="small"
+          onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -137,8 +203,8 @@ function FilterForm() {
             Sort
           </FormLabel>
           <RadioGroup
-            value={value}
-            onChange={handleChange}
+            value={sort}
+            onChange={handleSortChange}
             style={{ paddingTop: 10 }}
           >
             <FormControlLabel
@@ -202,9 +268,18 @@ function FilterForm() {
           </FormLabel>
 
           <Select label="Select" value={""} style={{ width: "100%" }}>
-            <MenuItem value={0}>Option</MenuItem>
+            {categories.map((category) => {
+              return <MenuItem value={category}>{category}</MenuItem>;
+            })}
           </Select>
         </FormControl>
+        <div style={{ minHeight: 30 }}>
+          <Chip
+            label={"category"}
+            variant="outlined"
+            className={classes.chip}
+          ></Chip>
+        </div>
       </Grid>
       <Grid item xs={12} className={classes.stage}>
         <FormControl component="fieldset">

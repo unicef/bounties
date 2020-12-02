@@ -1,12 +1,11 @@
-export default async (sig, token) => {
+export default async (bounty) => {
   let res;
   try {
-    res = await fetch(`/login/sig`, {
+    res = await fetch(`/bounties`, {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
-        sig,
-        token,
+        bounty,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -17,5 +16,5 @@ export default async (sig, token) => {
     return null;
   }
 
-  return token;
+  return bounty;
 };

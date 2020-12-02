@@ -3,7 +3,9 @@ const express = require("express");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const passportCustom = require("passport-custom");
+const CustomStrategy = passportCustom.Strategy;
+
 const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const { Logger } = require("node-core-utils");
@@ -11,6 +13,7 @@ const DB = require("./lib/db");
 const utils = require("./lib/utils");
 const lru = require("lru-cache");
 const Eth = require("ethjs");
+const sigUtil = require("eth-sig-util");
 const ethUtil = require("ethereumjs-util");
 const {
   devMode,
@@ -19,7 +22,7 @@ const {
   s3Upload,
   s3Download,
 } = require("./lib/middleware");
-const { LoginRoutes } = require("./lib/routes");
+const { LoginRoutes, BountiesRoutes } = require("./lib/routes");
 
 const defaultConfig = require("./config");
 const loginTokenCache = new lru(defaultConfig.loginTokenCacheOptions);
@@ -41,23 +44,33 @@ class BountiesAdmin {
     this.loginTokenCache = loginTokenCache;
     this.passport = passport;
     this.eth = new Eth(new Eth.HttpProvider(this.config.alchemyUrl));
+    this.sigUtil = sigUtil;
     this.ethUtil = ethUtil;
 
     this.passport.use(
-      new LocalStrategy(
-        { usernameField: "address" },
-        async (address, signedMessage, done) => {
-          console.log(address);
-          console.log(signedMessage);
-
-          return done(null, {
-            provider: "local",
-            email,
-            password,
-            profile,
-          });
+      "signature-verification",
+      new CustomStrategy((req, callback) => {
+        const { sig, token } = req.body;
+        let address;
+        if (!this.loginTokenCache.get(token)) {
+          return callback("token does not exist");
         }
-      )
+        loginTokenCache.del(token);
+
+        const message = this.ethUtil.bufferToHex(
+          new Buffer.from(`Your login nonce is: ${token}`, "utf8")
+        );
+
+        try {
+          address = this.sigUtil.recoverPersonalSignature({
+            data: message,
+            sig,
+          });
+        } catch (e) {
+          return callback(e);
+        }
+        return callback(null, { address });
+      })
     );
 
     this.passport.serializeUser((user, done) => {
@@ -88,8 +101,18 @@ class BountiesAdmin {
     this.server.set("loginTokenCache", this.loginTokenCache);
     this.server.set("eth", this.eth);
     this.server.set("ethUtil", this.ethUtil);
-
+    this.server.set("sigUtil", this.sigUtil);
+    this.server.use(logRequest);
     this.server.use("/login", LoginRoutes);
+    this.server.use("/bounties", BountiesRoutes);
+
+    this.server.post(
+      "/login/sig",
+      this.passport.authenticate("signature-verification"),
+      (req, res) => {
+        res.send(req.session.passport.user.address);
+      }
+    );
 
     this.logger.info(`Initialized`);
   }
@@ -109,6 +132,18 @@ class BountiesAdmin {
     this.logger.info(`exiting`);
     await this.db.disconnect();
     process.exit();
+  }
+
+  async saveBounty(bounty) {
+    this.logger.info(`Saving Bounty: ${bounty.title}`);
+
+    return await this.db.models.Bounty(bounty).save();
+  }
+
+  async getBounties() {
+    this.logger.info(`Getting Bounties`);
+
+    return await this.db.models.Bounty.find();
   }
 }
 

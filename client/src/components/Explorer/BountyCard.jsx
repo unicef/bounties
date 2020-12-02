@@ -45,20 +45,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     color: "#000000",
     marginRight: 4,
+    textTransform: "capitalize",
   },
 }));
-
-const data = {
-  title: "dApp Testing",
-  currency: "Dai",
-  amount: 5,
-  ownerImage: "",
-  ownerAddress: "0x2CE13ba4821b15a65CF186781dc3345545A441F2",
-  difficult: "Beginner",
-  deadline: 0,
-  submissions: 0,
-  categories: [],
-};
 
 function B({ children }) {
   const classes = useStyles();
@@ -71,14 +60,27 @@ function addressFormatter(address) {
   return address.slice(0, 6) + "..." + address.slice(address.length - 4);
 }
 
-export default function BountyCard(props) {
+export default function BountyCard({
+  title,
+  currency,
+  amount,
+  ownerImage,
+  owner,
+  difficulty,
+  deadline,
+  submissions,
+  categories,
+  payMethod,
+  payAmount,
+}) {
   const classes = useStyles();
+  const currentDate = new Date().getTime();
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} md={7}>
         <Grid container>
           <Grid item xs={8}>
-            <div className={classes.title}>{data.title}</div>
+            <div className={classes.title}>{title}</div>
           </Grid>
           <Grid item xs={4}>
             <Hidden smUp>
@@ -106,11 +108,16 @@ export default function BountyCard(props) {
         </Grid>
 
         <div style={{ minHeight: 32 }}>
-          <Chip
-            label="basic"
-            variant="outlined"
-            className={classes.chip}
-          ></Chip>
+          {categories.map((category) => {
+            return (
+              <Chip
+                key={category}
+                label={category}
+                variant="outlined"
+                className={classes.chip}
+              ></Chip>
+            );
+          })}
         </div>
         <div style={{ height: 32, display: "flex", clear: "both" }}>
           <Avatar
@@ -128,7 +135,7 @@ export default function BountyCard(props) {
               fontSize: 14,
             }}
           >
-            {addressFormatter(data.ownerAddress)}
+            {addressFormatter(owner)}
           </span>
         </div>
       </Grid>
@@ -151,7 +158,7 @@ export default function BountyCard(props) {
             <span style={{ marginTop: 2, marginRight: 4 }}>
               <ExtensionOutlinedIcon fontSize="small" />
             </span>
-            <B>Intermediate</B> difficulty
+            <B>{difficulty}</B> difficulty
           </div>
         </div>
         <div style={{ marginBottom: ".5rem" }}>
@@ -159,7 +166,11 @@ export default function BountyCard(props) {
             <span style={{ marginTop: 2, marginRight: 4 }}>
               <QueryBuilderIcon fontSize="small" />
             </span>
-            <B>244 years</B> remaining
+            <B>
+              {Math.round((deadline - currentDate) / 1000 / 60 / 60 / 24, 0)}{" "}
+              days
+            </B>{" "}
+            remaining
           </div>
         </div>
         <div>
@@ -179,7 +190,7 @@ export default function BountyCard(props) {
               color: "rgb(91, 41, 199)",
             }}
           >
-            $100.00
+            $0.00
           </div>
           <div
             style={{
@@ -188,7 +199,7 @@ export default function BountyCard(props) {
               textTransform: "uppercase",
             }}
           >
-            100 Dai
+            {payAmount} {payMethod}
           </div>
         </Grid>
       </Hidden>

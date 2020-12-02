@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TuneIcon from "@material-ui/icons/Tune";
 import BountyCard from "./BountyCard";
+import EthereumContext from "../../context/EthereumContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,14 +35,75 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ExplorerMain(props) {
   const classes = useStyles();
+  let { bounties, filters } = useContext(EthereumContext);
+  console.log(bounties);
+  console.log(filters);
+
+  bounties.forEach((bounty) => {
+    bounty.timestamp = parseInt(bounty._id.toString().substring(0, 8), 16);
+    bounty.timeLeft = bounty.deadline - new Date().getTime();
+  });
+
+  let displayBounties = [];
+  console.log(filters);
+  if (filters.difficulty.beginner) {
+    displayBounties = displayBounties.concat(
+      bounties.filter((bounty) => {
+        return bounty.difficulty === "beginner";
+      })
+    );
+  }
+
+  if (filters.difficulty.intermediate) {
+    displayBounties = displayBounties.concat(
+      bounties.filter((bounty) => {
+        return bounty.difficulty === "intermediate";
+      })
+    );
+  }
+
+  if (filters.difficulty.expert) {
+    displayBounties = displayBounties.concat(
+      bounties.filter((bounty) => {
+        return bounty.difficulty === "expert";
+      })
+    );
+  }
+
+  switch (filters.sort) {
+    case "recent":
+      displayBounties = displayBounties.sort((a, b) => {
+        return b.timestamp - a.timestamp;
+      });
+      break;
+    case "value":
+      displayBounties = displayBounties.sort((a, b) => {
+        return b.payAmount - a.payAmount;
+      });
+      break;
+    case "expiry":
+      displayBounties = displayBounties.sort((a, b) => {
+        return a.timeLeft - b.timeLeft;
+      });
+      break;
+    case "viewed":
+      break;
+    default:
+      break;
+  }
+
+  if (filters.search) {
+    displayBounties = displayBounties.filter((bounty) => {
+      return bounty.title.indexOf(filters.search) >= 0;
+    });
+  }
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12}>
         <Grid container className={classes.header}>
           <Grid item xs={6}>
-            <span className={classes.bountyCount}>
-              {props.totalBounties || 0}
-            </span>{" "}
+            <span className={classes.bountyCount}>{bounties.length || 0}</span>{" "}
             <span className={classes.bounties}>bounties</span>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
@@ -65,17 +127,9 @@ export default function ExplorerMain(props) {
         </Grid>
       </Grid>
       <Grid item xs={12} className={classes.bountyList}>
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
-        <BountyCard />
+        {displayBounties.map((bounty, index) => {
+          return <BountyCard key={index} {...bounty} />;
+        })}
       </Grid>
     </Grid>
   );
