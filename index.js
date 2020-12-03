@@ -149,7 +149,7 @@ class BountiesAdmin {
   async getBountyById(bountyId) {
     this.logger.info(`Getting Bounty ${bountyId}`);
 
-    return await this.db.models.Bounty.find({ bountyId });
+    return await this.db.models.Bounty.findOne({ bountyId });
   }
 }
 

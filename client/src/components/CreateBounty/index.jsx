@@ -176,7 +176,8 @@ export default function (props) {
         contract,
         "",
         formData.deadline,
-        Web3Utils.toWei(formData.payAmount.toString())
+        Web3Utils.toWei(formData.payAmount.toString()),
+        formData.payMethod
       );
 
       const { _bountyId } = bountyTx.events.BountyIssued.returnValues;
@@ -195,7 +196,6 @@ export default function (props) {
       });
       console.log(e);
     }
-    console.log(formData);
   };
 
   const handleFormChange = (event) => {
@@ -742,11 +742,11 @@ export default function (props) {
                           label="ETH"
                         />
                         <FormControlLabel
-                          value="erc20"
+                          value="bst"
                           control={
                             <Radio style={{ padding: 4, paddingLeft: 9 }} />
                           }
-                          label="ERC-20 Token"
+                          label="BST"
                         />
                       </RadioGroup>
                     </FormControl>
@@ -822,7 +822,10 @@ export default function (props) {
                         <FormControlLabel
                           value="later"
                           control={
-                            <Radio style={{ padding: 4, paddingLeft: 9 }} />
+                            <Radio
+                              style={{ padding: 4, paddingLeft: 9 }}
+                              disabled
+                            />
                           }
                           label="Later"
                         />

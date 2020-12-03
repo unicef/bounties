@@ -11,14 +11,14 @@ const useStyles = makeStyles((theme) => ({
   },
   gradient: {
     background: "linear-gradient(45deg, #754dcb, #4d94ff)",
-    height: 400,
+    height: 350,
     position: "absolute",
     width: "100%",
   },
   content: {
     position: "absolute",
     width: "100%",
-    paddingTop: "2.5rem",
+    paddingTop: "2rem",
   },
 }));
 export default function Main(props) {

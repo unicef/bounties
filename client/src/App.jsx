@@ -4,6 +4,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter as Router } from "react-router-dom";
 import BountiesContract from "./contracts/StandardBounties.json";
+import ERC20Token from "./contracts/ERC20Token.json";
 import "./app.css";
 import Layout from "./components/Layout";
 import getWeb3 from "./getWeb3";
@@ -44,6 +45,7 @@ export default function BountiesAdmin() {
   const [networkId, setNetworkId] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
+  const [boostContract, setBoostContract] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [bounties, setBounties] = useState([]);
@@ -101,7 +103,19 @@ export default function BountiesAdmin() {
         BountiesContract.abi,
         deployedNetwork && deployedNetwork.address
       );
+      const BoostInstance = new web3.eth.Contract(
+        ERC20Token.abi,
+        4 && "0x4f1690e9b1576a997e40334674d3f14e966bb7bb"
+      );
 
+      /*
+      await BoostInstance.methods
+        .approve(
+          "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+          web3.utils.toWei((10e18).toString())
+        )
+        .send({ from: accounts[0] });
+*/
       // Login
       const token = await getLoginToken();
       const eth = new Eth(web3.currentProvider);
@@ -124,6 +138,7 @@ export default function BountiesAdmin() {
       setWeb3(web3);
       setContract(instance);
       setAccounts(accounts);
+      setBoostContract(BoostInstance);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
