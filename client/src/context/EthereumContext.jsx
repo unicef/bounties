@@ -7,6 +7,7 @@ const EthereumContext = createContext({
   web3: null,
   contract: null,
   BoostContract: null,
+  BoostContract: null,
   accounts: [],
   filters: {},
   setFilters: null,

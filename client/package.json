@@ -2,7 +2,7 @@
   "name": "client-admin",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/explorer/",
+  "homepage": "/",
   "proxy": "http://localhost:9000",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",

@@ -103,8 +103,10 @@ class BountiesAdmin {
     this.server.set("ethUtil", this.ethUtil);
     this.server.set("sigUtil", this.sigUtil);
     this.server.use(logRequest);
+    this.server.use("/", express.static("./client/build"));
     this.server.use("/login", LoginRoutes);
     this.server.use("/bounties", BountiesRoutes);
+    this.server.use("*", express.static("./client/build"));
 
     this.server.post(
       "/login/sig",

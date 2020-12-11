@@ -174,6 +174,7 @@ export default function BountiesAdmin() {
             networkId,
             web3,
             contract,
+            boostContract,
             accounts,
             filters,
             setFilters,
