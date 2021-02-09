@@ -243,7 +243,6 @@ function FilterForm() {
               control={
                 <Checkbox
                   checked={unicef}
-                  onChange={handlePlatformChange}
                   name="unicef"
                   style={{ padding: 4, paddingLeft: 9 }}
                 />
