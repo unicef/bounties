@@ -80,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 function FilterForm() {
   const classes = useStyles();
   const [search, setSearch] = React.useState("");
+  const [category, setCategory] = React.useState("");
   const [sort, setSort] = React.useState("recent");
   const { setFilters, bounties } = useContext(EthereumContext);
 
@@ -104,6 +105,7 @@ function FilterForm() {
       search: event.target.value,
       sort,
       platform,
+      category,
       stage,
       difficulty,
     });
@@ -115,6 +117,7 @@ function FilterForm() {
       search,
       sort: event.target.value,
       platform,
+      category,
       stage,
       difficulty,
     });
@@ -125,6 +128,7 @@ function FilterForm() {
       search,
       sort,
       platform: { ...platform, [event.target.name]: event.target.checked },
+      category,
       stage,
       difficulty,
     });
@@ -135,6 +139,7 @@ function FilterForm() {
       search,
       sort,
       platform,
+      category,
       stage: { ...stage, [event.target.name]: event.target.checked },
       difficulty,
     });
@@ -145,8 +150,20 @@ function FilterForm() {
       search,
       sort,
       platform,
+      category,
       stage,
       difficulty: { ...difficulty, [event.target.name]: event.target.checked },
+    });
+  };
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+    setFilters({
+      search,
+      sort,
+      platform,
+      category: event.target.value,
+      stage,
+      difficulty,
     });
   };
 
@@ -267,7 +284,7 @@ function FilterForm() {
             Category
           </FormLabel>
 
-          <Select label="Select" value={""} style={{ width: "100%" }}>
+          <Select label="Select" style={{ width: "100%" }} onChange={handleCategoryChange} >
             {categories.map((category) => {
               return (
                 <MenuItem key={category} value={category}>
