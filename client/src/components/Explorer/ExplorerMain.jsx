@@ -108,7 +108,7 @@ export default function ExplorerMain(props) {
       <Grid item xs={12}>
         <Grid container className={classes.header}>
           <Grid item xs={6}>
-            <span className={classes.bountyCount}>{bounties.length || 0}</span>{" "}
+            <span className={classes.bountyCount}>{displayBounties.length || 0}</span>{" "}
             <span className={classes.bounties}>bounties</span>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
