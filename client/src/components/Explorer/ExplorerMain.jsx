@@ -103,6 +103,12 @@ export default function ExplorerMain(props) {
     });
   }
 
+  if (filters.category) {
+    displayBounties = displayBounties.filter((bounty) => {
+      return bounty.categories.includes(filters.category);
+    });
+  }
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12}>
