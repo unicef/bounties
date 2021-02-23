@@ -67,11 +67,36 @@ export default function ExplorerMain(props) {
     );
   }
 
-  if (filters.difficulty.expert) {
+  if (filters.difficulty.advanced) {
     displayBounties = displayBounties.concat(
       bounties.filter((bounty) => {
         return bounty.difficulty === "expert";
       })
+    );
+  }
+
+  if (filters.stage.active) {
+    displayBounties = displayBounties.concat(
+        bounties.filter((bounty) => {
+          return bounty.activate === "now" && !displayBounties.includes(bounty);
+        })
+    );
+  }
+
+  if (filters.stage.expired) {
+    displayBounties = displayBounties.concat(
+        bounties.filter((bounty) => {
+          const currentDate = new Date().getTime();
+          return bounty.deadline - currentDate < 0 && !displayBounties.includes(bounty);
+        })
+    );
+  }
+
+  if (filters.difficulty.advanced) {
+    displayBounties = displayBounties.concat(
+        bounties.filter((bounty) => {
+          return bounty.difficulty === "expert";
+        })
     );
   }
 
@@ -114,7 +139,7 @@ export default function ExplorerMain(props) {
       <Grid item xs={12}>
         <Grid container className={classes.header}>
           <Grid item xs={6}>
-            <span className={classes.bountyCount}>{bounties.length || 0}</span>{" "}
+            <span className={classes.bountyCount}>{displayBounties.length || 0}</span>{" "}
             <span className={classes.bounties}>bounties</span>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
