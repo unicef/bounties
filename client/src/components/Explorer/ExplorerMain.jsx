@@ -73,25 +73,6 @@ export default function ExplorerMain(props) {
     );
   }
 
-  if (filters.stage.active) {
-    displayBounties = displayBounties.concat(
-      bounties.filter((bounty) => {
-        return bounty.activate === "now" && !displayBounties.includes(bounty);
-      })
-    );
-  }
-
-  if (filters.stage.expired) {
-    displayBounties = displayBounties.concat(
-      bounties.filter((bounty) => {
-        const currentDate = new Date().getTime();
-        return (
-          bounty.deadline - currentDate < 0 && !displayBounties.includes(bounty)
-        );
-      })
-    );
-  }
-
   if (filters.difficulty.advanced) {
     displayBounties = displayBounties.concat(
       bounties.filter((bounty) => {
@@ -132,6 +113,34 @@ export default function ExplorerMain(props) {
     displayBounties = displayBounties.filter((bounty) => {
       return bounty.categories.includes(filters.category);
     });
+  }
+
+  const activeBounties = displayBounties.filter((bounty) => {
+    return bounty.timeLeft > 0;
+  });
+  const completeBounties = displayBounties.filter((bounty) => {
+    // return bounty.timeLeft < 0 && bounty.amountPaid > 0
+    return false;
+  });
+  const expiredBounties = displayBounties.filter((bounty) => {
+    return bounty.timeLeft < 0;
+  });
+  const deadBounties = displayBounties.filter((bounty) => {
+    return false;
+  });
+
+  displayBounties = [];
+  if (filters.stage.active) {
+    displayBounties = displayBounties.concat(activeBounties);
+  }
+  if (filters.stage.complete) {
+    displayBounties = displayBounties.concat(completeBounties);
+  }
+  if (filters.stage.expired) {
+    displayBounties = displayBounties.concat(expiredBounties);
+  }
+  if (filters.stage.dead) {
+    displayBounties = displayBounties.concat(deadBounties);
   }
 
   return (
