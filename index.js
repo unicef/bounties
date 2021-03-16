@@ -5,7 +5,6 @@ const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const passportCustom = require("passport-custom");
 const CustomStrategy = passportCustom.Strategy;
-
 const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const { Logger } = require("node-core-utils");
@@ -109,6 +108,16 @@ class BountiesAdmin {
     this.server.use("/profile", express.static("./client/build"));
     this.server.use("/login", LoginRoutes);
     this.server.use("/bounties", BountiesRoutes);
+    this.server.use(
+      "/upload/image",
+      isLoggedIn,
+      s3Upload.single("image"),
+      (req, res) => {
+        req.file.imageUrl = `/image/${req.file.key}`;
+        req.file.downloadUrl = `/download/${req.file.key}`;
+        res.json(req.file);
+      }
+    );
     this.server.use("*", express.static("./client/build"));
 
     this.server.post(
