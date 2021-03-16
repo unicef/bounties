@@ -18,6 +18,7 @@ import CreateBounty from "../CreateBounty";
 import Privacy from "../Privacy";
 import TermsOfService from "../TOS";
 import BountyPage from "../BountyPage";
+import AccountSettings from "../AccountSettings";
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -56,6 +57,11 @@ export default function Layout(props) {
           </BountyBackground>
         </Route>
 
+        <Route exact path="/account">
+          <MainBackground>
+            <AccountSettings />
+          </MainBackground>
+        </Route>
         <Route exact path="/createBounty">
           <MainBackground>
             {/*loggedIn*/ true ? <CreateBounty /> : <Login />}

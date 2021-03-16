@@ -43,7 +43,7 @@ export default function SimpleList() {
             <ListItemText primary="Profile" />
           </ListItem>
         </Link>
-        <Link className={classes.link}>
+        <Link to="/account" className={classes.link}>
           <ListItem button>
             <ListItemIcon className={classes.listItemIcon}>
               <SettingsIcon />
