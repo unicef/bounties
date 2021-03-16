@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -16,8 +16,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import EthereumContext from "../../context/EthereumContext";
-import makeBounty from "../../actions/makeBounty";
-import saveBounty from "../../actions/saveBounty";
+import saveAccountSettings from "../../actions/saveAccountSettings";
+import getAccount from "../../actions/getAccountSettings";
 import { useSnackbar } from "notistack";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
@@ -137,6 +137,7 @@ export default function (props) {
     initAppData,
     networkId,
   } = useContext(EthereumContext);
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
@@ -170,6 +171,19 @@ export default function (props) {
   const handleFormChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
+
+  useEffect(() => {
+    async function init() {
+      console.log("account settings");
+      const account = await getAccount();
+      if (account) {
+        console.log(account);
+        setFormData(account);
+      }
+    }
+
+    init();
+  }, []);
 
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
@@ -246,9 +260,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Name"
                         name="name"
-                        defaultValue={name}
+                        value={name}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -273,9 +286,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Organization"
                         name="organization"
-                        defaultValue={organization}
+                        value={organization}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -296,16 +308,43 @@ export default function (props) {
                         Languages
                       </FormLabel>
 
-                      <Select
-                        label="Select"
-                        defaultValue={0}
-                        onChange={(e) => {}}
-                        style={{ width: 280, marginTop: ".5rem" }}
-                      >
-                        <MenuItem key={"test"} value={"test"}>
-                          Test
-                        </MenuItem>
-                      </Select>
+                      <TextField
+                        color="secondary"
+                        variant="outlined"
+                        size="small"
+                        name="weblink"
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            if (languages.indexOf(e.target.value) === -1) {
+                              languages.push(e.target.value);
+                              setFormData({ ...formData, languages });
+                            }
+
+                            e.target.value = "";
+                          }
+                        }}
+                        className={classes.textfield}
+                      ></TextField>
+                      <div>
+                        {languages.map((language) => {
+                          return (
+                            <Chip
+                              key={language}
+                              label={language}
+                              variant="outlined"
+                              className={classes.chip}
+                              onClick={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  languages: languages.filter((lng) => {
+                                    return lng !== language;
+                                  }),
+                                });
+                              }}
+                            ></Chip>
+                          );
+                        })}
+                      </div>
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -342,16 +381,43 @@ export default function (props) {
                         Skills
                       </FormLabel>
 
-                      <Select
-                        label="Select"
-                        defaultValue={0}
-                        onChange={(e) => {}}
-                        style={{ width: 280, marginTop: ".5rem" }}
-                      >
-                        <MenuItem key={"test"} value={"test"}>
-                          Test
-                        </MenuItem>
-                      </Select>
+                      <TextField
+                        color="secondary"
+                        variant="outlined"
+                        size="small"
+                        name="weblink"
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            if (skills.indexOf(e.target.value) === -1) {
+                              skills.push(e.target.value);
+                              setFormData({ ...formData, skills });
+                            }
+
+                            e.target.value = "";
+                          }
+                        }}
+                        className={classes.textfield}
+                      ></TextField>
+                      <div>
+                        {skills.map((skill) => {
+                          return (
+                            <Chip
+                              key={skill}
+                              label={skill}
+                              variant="outlined"
+                              className={classes.chip}
+                              onClick={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  skills: skills.filter((skl) => {
+                                    return skl !== skill;
+                                  }),
+                                });
+                              }}
+                            ></Chip>
+                          );
+                        })}
+                      </div>
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -390,9 +456,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Website"
                         name="website"
-                        defaultValue={website}
+                        value={website}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -417,9 +482,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Twitter"
                         name="twitter"
-                        defaultValue={twitter}
+                        value={twitter}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -446,9 +510,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Github"
                         name="github"
-                        defaultValue={github}
+                        value={github}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -473,9 +536,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="LinkedIn"
                         name="linkedin"
-                        defaultValue={linkedin}
+                        value={linkedin}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -515,9 +577,8 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Email"
                         name="email"
-                        defaultValue={email}
+                        value={email}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -529,8 +590,16 @@ export default function (props) {
                             control={
                               <Checkbox
                                 name="canContact"
-                                defaultValue={canContact}
+                                checked={canContact}
                                 style={{ padding: 4, paddingLeft: 9 }}
+                                onChange={(e) => {
+                                  handleFormChange({
+                                    target: {
+                                      value: e.target.checked,
+                                      name: "canContact",
+                                    },
+                                  });
+                                }}
                               />
                             }
                             label="I would also like to receive relevant bounty suggestions and platform updates."
@@ -545,7 +614,12 @@ export default function (props) {
                 <Divider className={classes.divider} />
               </Grid>
               <Grid item xs={12} style={{ textAlign: "center" }}>
-                <Button className={classes.createBountyButton}>
+                <Button
+                  className={classes.createBountyButton}
+                  onClick={() => {
+                    saveAccountSettings(formData);
+                  }}
+                >
                   Update Profile
                 </Button>
               </Grid>

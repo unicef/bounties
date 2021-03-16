@@ -21,7 +21,7 @@ const {
   s3Upload,
   s3Download,
 } = require("./lib/middleware");
-const { LoginRoutes, BountiesRoutes } = require("./lib/routes");
+const { LoginRoutes, BountiesRoutes, AccountRoutes } = require("./lib/routes");
 
 const defaultConfig = require("./config");
 const loginTokenCache = new lru(defaultConfig.loginTokenCacheOptions);
@@ -108,6 +108,7 @@ class BountiesAdmin {
     this.server.use("/profile", express.static("./client/build"));
     this.server.use("/login", LoginRoutes);
     this.server.use("/bounties", BountiesRoutes);
+    this.server.use("/account", AccountRoutes);
     this.server.use(
       "/upload/image",
       isLoggedIn,
@@ -167,6 +168,21 @@ class BountiesAdmin {
     this.logger.info(`Getting Bounty ${bountyId}`);
 
     return await this.db.models.Bounty.findOne({ bountyId });
+  }
+
+  async saveAccount(account) {
+    this.logger.info(`Saving account: ${account.address}`);
+
+    return await this.db.models.AccountSettings.findOneAndUpdate(
+      { address: account.address },
+      account,
+      { upsert: true, new: true }
+    );
+  }
+  async getAccountByAddress(address) {
+    this.logger.info(`Getting account: ${address}`);
+
+    return await this.db.models.AccountSettings.findOne({ address });
   }
 }
 
