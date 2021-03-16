@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import EthereumContext from "../../context/EthereumContext";
+import MenuPopper from "../MenuPopper";
+import OptionsList from "./OptionsList";
 
 const networkNames = {
   null: "Disconnected",
@@ -33,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 2px 4px rgba(0,0,0,.075)",
   },
   avatar: {
+    cursor: "pointer",
     border: "solid 3px #ffffff",
     boxShadow: "0 2px 4px rgba(0,0,0,.15)",
   },
@@ -148,9 +151,15 @@ export default function TopBar(props) {
                 color: "#868e9c",
               }}
             />
-            <Link to="/profile">
-              <Avatar alt="User Name" src={null} className={classes.avatar} />
-            </Link>
+
+            <MenuPopper
+              placement={"bottom"}
+              button={
+                <Avatar alt="User Name" src={null} className={classes.avatar} />
+              }
+            >
+              <OptionsList />
+            </MenuPopper>
           </Fragment>
         )}
       </Toolbar>
