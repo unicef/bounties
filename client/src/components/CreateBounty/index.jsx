@@ -125,9 +125,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function (props) {
   const classes = useStyles();
-  const { contract, accounts, initAppData, networkId } = useContext(
-    EthereumContext
-  );
+  const {
+    contract,
+    boostContract,
+    accounts,
+    initAppData,
+    networkId,
+  } = useContext(EthereumContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
@@ -170,6 +174,15 @@ export default function (props) {
       notificationId = enqueueSnackbar("Complete your bounty in your wallet.", {
         autoHideDuration: 3000,
       });
+
+      if (formData.payMethod === "bst") {
+        await boostContract.methods
+          .approve(
+            "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+            Web3Utils.toWei(formData.payAmount.toString())
+          )
+          .send({ from: accounts[0] });
+      }
 
       bountyTx = await makeBounty(
         accounts[0],
