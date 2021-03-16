@@ -118,6 +118,9 @@ class BountiesAdmin {
         res.json(req.file);
       }
     );
+    this.server.use("/image/:key", isLoggedIn, (req, res) => {
+      s3Download(req.params.key).pipe(res);
+    });
     this.server.use("*", express.static("./client/build"));
 
     this.server.post(

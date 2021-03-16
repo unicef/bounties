@@ -140,48 +140,37 @@ export default function (props) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
-    title: "",
-
-    difficulty: "beginner",
-    contactName: "",
-    contactEmail: "",
-    deadline: 0,
-    revisions: 3,
-    weblink: "",
-    preapproval: "no",
-    visibility: "public",
-    payMethod: "eth",
-    payAmount: 0,
-    activate: "now",
-    categories: [],
+    image: "",
+    name: "",
+    organization: "",
+    languages: [],
+    skills: [],
+    website: "",
+    twitter: "",
+    github: "",
+    linkedin: "",
+    email: "",
+    canContact: false,
   });
 
   const {
-    title,
-    description,
-    difficulty,
-    contactName,
-    contactEmail,
-    revisions,
-    weblink,
-    preapproval,
-    visibility,
-    payMethod,
-    payAmount,
-    activate,
-    categories,
+    image,
+    name,
+    organization,
+    languages,
+    skills,
+    website,
+    twitter,
+    github,
+    linkedin,
+    email,
+    canContact,
   } = formData;
 
   const handleFormChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const incrementRevisions = () => {
-    setFormData({ ...formData, revisions: revisions + 1 });
-  };
-  const decrementRevisions = () => {
-    if (revisions) setFormData({ ...formData, revisions: revisions - 1 });
-  };
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
       <Grid container>
@@ -200,17 +189,25 @@ export default function (props) {
                   style={{ marginTop: "3em", marginBottom: "3em" }}
                 >
                   <Grid item>
-                    <Avatar style={{ width: 80, height: 80 }}>
+                    <Avatar style={{ width: 80, height: 80 }} src={image}>
                       <PhotoCameraIcon style={{ color: "#5e5e5e" }} />
                     </Avatar>
                   </Grid>
                   <Grid item>
-                    <Button
-                      variant="outlined"
-                      style={{ marginLeft: "1em", marginTop: "2em" }}
+                    <FileUpload
+                      afterUpload={(data) => {
+                        handleFormChange({
+                          target: { name: "image", value: data.imageUrl },
+                        });
+                      }}
                     >
-                      Upload New Photo
-                    </Button>
+                      <Button
+                        variant="outlined"
+                        style={{ marginLeft: "1em", marginTop: "2em" }}
+                      >
+                        Upload New Photo
+                      </Button>
+                    </FileUpload>
                   </Grid>
                 </Grid>
               </Grid>
@@ -251,6 +248,7 @@ export default function (props) {
                         size="small"
                         label="Name"
                         name="name"
+                        defaultValue={name}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -277,6 +275,7 @@ export default function (props) {
                         size="small"
                         label="Organization"
                         name="organization"
+                        defaultValue={organization}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -391,8 +390,9 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Name"
-                        name="name"
+                        label="Website"
+                        name="website"
+                        defaultValue={website}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -417,8 +417,9 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Organization"
-                        name="organization"
+                        label="Twitter"
+                        name="twitter"
+                        defaultValue={twitter}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -445,8 +446,9 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Name"
-                        name="name"
+                        label="Github"
+                        name="github"
+                        defaultValue={github}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -471,8 +473,9 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Organization"
-                        name="organization"
+                        label="LinkedIn"
+                        name="linkedin"
+                        defaultValue={linkedin}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -512,8 +515,9 @@ export default function (props) {
                         color="secondary"
                         variant="outlined"
                         size="small"
-                        label="Name"
-                        name="name"
+                        label="Email"
+                        name="email"
+                        defaultValue={email}
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
@@ -524,7 +528,8 @@ export default function (props) {
                           <FormControlLabel
                             control={
                               <Checkbox
-                                name="unicef"
+                                name="canContact"
+                                defaultValue={canContact}
                                 style={{ padding: 4, paddingLeft: 9 }}
                               />
                             }
