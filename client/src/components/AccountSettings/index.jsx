@@ -24,6 +24,29 @@ import Avatar from "@material-ui/core/Avatar";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import FileUpload from "../FileUpload";
 import Checkbox from "@material-ui/core/Checkbox";
+import NotificationOption from "./NotificationOption";
+
+const notifications = [
+  "User issues you a rating",
+  "Bounty transfer to another user completes",
+  "A bounty you fulfilled receives a comment",
+  "Your bounty receives a comment",
+  "A submission you commented on receives a comment",
+  "Your submission receives a comment",
+  "A submission to your bounty receives a comment",
+  "A submission you commented on receives a comment",
+  "A bounty you fulfilled is changed",
+  "A bounty you applied for is changed",
+  "Bounty expires",
+  "Fulfiller, updates their fulfillment on your bounty",
+  "Fulfiller, submits a new fulfillment to your bounty",
+  "Issuer accepts your fulfillment",
+  "Another user contributes funds to your bounty",
+  "Bounty no longer has enough funds to pay out",
+  "New worker applies to bounty",
+  "Issuer accepts your application",
+  "Issuer rejects your application",
+];
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -623,6 +646,50 @@ export default function (props) {
                   Update Profile
                 </Button>
               </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      <Grid container>
+        <Grid item xs={12}>
+          <Paper elevation={1} className={classes.paper}>
+            <Grid container>
+              <Grid item xs={12} md={3}>
+                <p className={classes.formTitle}>Email Notifications</p>
+              </Grid>
+              <Grid item xs={12} md={9}>
+                <p className={classes.prompt} style={{ marginBottom: 0 }}>
+                  What notifications would you like to receive via email?
+                </p>
+                <p className={classes.descriptionText}>
+                  Opt in or out of the notifications you wish to receive via
+                  email. We recommend sticking with the default settings so that
+                  you can be informed of important activity relevant to you on
+                  the network.
+                </p>
+              </Grid>
+              <Grid item xs={12} md={3}></Grid>
+              <Grid item xs={12} md={9}>
+                <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+                  {notifications.map((option) => {
+                    return <NotificationOption text={option} />;
+                  })}
+                </ul>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider className={classes.divider} />
+            </Grid>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <Button
+                className={classes.createBountyButton}
+                onClick={() => {
+                  //saveNotifications
+                }}
+              >
+                Update Notifications
+              </Button>
             </Grid>
           </Paper>
         </Grid>
