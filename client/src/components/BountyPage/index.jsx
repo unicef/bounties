@@ -146,6 +146,7 @@ export default function (props) {
   useEffect(() => {
     const initApp = async () => {
       const bounty = await getBounty(bountyId);
+      console.log("bounty");
       console.log(bounty);
       setBounty(bounty);
     };
@@ -290,17 +291,9 @@ export default function (props) {
                         <div style={{ marginBottom: ".5rem" }}>
                           <div style={{ display: "flex", clear: "both" }}>
                             <span style={{ marginTop: 2, marginRight: 4 }}>
-                              <AttachmentIcon fontSize="small" />
-                            </span>
-                            Attachment
-                          </div>
-                        </div>
-                        <div style={{ marginBottom: ".5rem" }}>
-                          <div style={{ display: "flex", clear: "both" }}>
-                            <span style={{ marginTop: 2, marginRight: 4 }}>
                               <LinkIcon fontSize="small" />
                             </span>
-                            link
+                            {bounty.weblink}
                           </div>
                         </div>
 
@@ -309,7 +302,7 @@ export default function (props) {
                             <span style={{ marginTop: 0, marginRight: 4 }}>
                               <MailOutlineIcon />
                             </span>
-                            Email
+                            {bounty.contactEmail}
                           </div>
                         </div>
                       </div>
@@ -384,17 +377,14 @@ export default function (props) {
                         <div style={{ marginBottom: ".5rem" }}>
                           <div style={{ display: "flex", clear: "both" }}>
                             <span style={{ marginTop: 2, marginRight: 4 }}>
-                              <AttachmentIcon fontSize="small" />
-                            </span>
-                            Attachment
-                          </div>
-                        </div>
-                        <div style={{ marginBottom: ".5rem" }}>
-                          <div style={{ display: "flex", clear: "both" }}>
-                            <span style={{ marginTop: 2, marginRight: 4 }}>
                               <LinkIcon fontSize="small" />
                             </span>
-                            link
+                            <a
+                              href={bounty.weblink}
+                              style={{ textDecoration: "none" }}
+                            >
+                              {bounty.weblink}
+                            </a>
                           </div>
                         </div>
 
@@ -403,7 +393,12 @@ export default function (props) {
                             <span style={{ marginTop: 0, marginRight: 4 }}>
                               <MailOutlineIcon />
                             </span>
-                            Email
+                            <a
+                              href={`mailto:${bounty.contactEmail}`}
+                              style={{ textDecoration: "none" }}
+                            >
+                              {bounty.contactEmail}
+                            </a>
                           </div>
                         </div>
                       </div>
