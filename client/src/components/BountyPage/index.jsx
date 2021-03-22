@@ -17,6 +17,10 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import LinkIcon from "@material-ui/icons/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import TextField from "@material-ui/core/TextField";
+import Modal from "../Modal";
 import "./markdown.scss";
 
 const useStyles = makeStyles((theme) => ({
@@ -124,6 +128,16 @@ const useStyles = makeStyles((theme) => ({
   capitalize: {
     textTransform: "uppercase",
   },
+  label: {
+    color: "#868e9c",
+    fontSize: 12,
+    paddingTop: "1rem",
+  },
+  textfield: {
+    backgroundColor: "#f8f9fb",
+    marginTop: ".5rem",
+    width: 280,
+  },
 }));
 
 function addressFormatter(address) {
@@ -141,6 +155,8 @@ export default function (props) {
   const classes = useStyles();
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
+  const [showContribute, setShowContribute] = useState(true);
+
   const currentDate = new Date().getTime();
 
   useEffect(() => {
@@ -157,6 +173,36 @@ export default function (props) {
 
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
+      <Modal
+        open={showContribute}
+        handleClose={() => {
+          setShowContribute(false);
+        }}
+        title={"Increase the balance"}
+        subtitle={
+          "Indicate the amount you would like to contribute towards the bounty"
+        }
+      >
+        <FormControl variant="outlined" className={classes.bountyTitle}>
+          <FormLabel
+            component="legend"
+            style={{
+              fontWeight: 400,
+            }}
+            className={classes.label}
+          >
+            Deposit amount
+          </FormLabel>
+          <TextField
+            placeholder="Enter Amount"
+            color="secondary"
+            variant="outlined"
+            size="small"
+            label="Enter Amount..."
+            className={classes.textfield}
+          ></TextField>
+        </FormControl>
+      </Modal>
       <Grid container>
         <Grid item xs={12} style={{ marginBottom: "3.5rem" }}>
           <Grid container>
@@ -235,7 +281,12 @@ export default function (props) {
               <Hidden smUp>
                 <Grid item xs={12} md={4}>
                   <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
@@ -321,7 +372,12 @@ export default function (props) {
               <Hidden smDown>
                 <Grid item xs={12} md={4}>
                   <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
