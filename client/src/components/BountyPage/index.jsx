@@ -182,7 +182,7 @@ export default function (props) {
 
   if (!bounty) return null;
 
-  const contributeToBounty = async () => {
+  const contribute = async () => {
     let bountyTx;
     let notificationId;
     try {
@@ -201,22 +201,28 @@ export default function (props) {
           )
           .send({ from: accounts[0] });
       }
+
       /*
-      bountyTx = await makeBounty(
-        accounts[0],
+  contract,
+  valueInWei,
+  payMethod,
+  sender,
+  bountyId
+*/
+
+      bountyTx = await contributeToBounty(
         contract,
-        "",
-        bounty.deadline,
         Web3Utils.toWei(bounty.payAmount.toString()),
-        bounty.payMethod
+        bounty.payMethod,
+        accounts[0],
+        bounty.bountyId
       );
 
-      const { _bountyId } = bountyTx.events.BountyIssued.returnValues;
-      enqueueSnackbar("Your bounty has been mined, bountId: " + _bountyId, {
+      enqueueSnackbar("Your contribution has been made", {
         variant: "success",
         autoHideDuration: 3000,
       });
-      */
+
       // POST bounty data to backend
     } catch (e) {
       closeSnackbar(notificationId);
@@ -235,7 +241,7 @@ export default function (props) {
         handleClose={() => {
           setShowContribute(false);
         }}
-        onClick={contributeToBounty}
+        onClick={contribute}
         title={"Increase the balance"}
         subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
       >
