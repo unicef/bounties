@@ -88,7 +88,7 @@ export default function SimpleModal({
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ textAlign: "right" }}>
           <Button variant="outlined" className={classes.outlinedButton}>
             Cancel
           </Button>

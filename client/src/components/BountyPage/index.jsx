@@ -156,13 +156,11 @@ export default function (props) {
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
   const [showContribute, setShowContribute] = useState(true);
-
   const currentDate = new Date().getTime();
 
   useEffect(() => {
     const initApp = async () => {
       const bounty = await getBounty(bountyId);
-      console.log("bounty");
       console.log(bounty);
       setBounty(bounty);
     };
@@ -179,9 +177,7 @@ export default function (props) {
           setShowContribute(false);
         }}
         title={"Increase the balance"}
-        subtitle={
-          "Indicate the amount you would like to contribute towards the bounty"
-        }
+        subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
       >
         <FormControl variant="outlined" className={classes.bountyTitle}>
           <FormLabel
@@ -191,7 +187,7 @@ export default function (props) {
             }}
             className={classes.label}
           >
-            Deposit amount
+            Deposit amount ({bounty.payMethod.toUpperCase()})
           </FormLabel>
           <TextField
             placeholder="Enter Amount"
