@@ -66,6 +66,7 @@ export default function SimpleModal({
   open,
   handleClose,
   children,
+  onClick,
 }) {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -96,6 +97,7 @@ export default function SimpleModal({
             variant="contained"
             elevation={0}
             className={classes.filledButton}
+            onClick={onClick}
           >
             Contribute
           </Button>

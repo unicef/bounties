@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -20,9 +20,13 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
+import EthereumContext from "../../context/EthereumContext";
+import contributeToBounty from "../../actions/contributeToBounty";
 import Modal from "../Modal";
 import "./markdown.scss";
+import { useSnackbar } from "notistack";
 
+const Web3Utils = require("web3-utils");
 const useStyles = makeStyles((theme) => ({
   root: {},
   title: {
@@ -153,10 +157,19 @@ function B({ children }) {
 
 export default function (props) {
   const classes = useStyles();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
   const [showContribute, setShowContribute] = useState(true);
   const currentDate = new Date().getTime();
+
+  const {
+    contract,
+    boostContract,
+    accounts,
+    initAppData,
+    networkId,
+  } = useContext(EthereumContext);
 
   useEffect(() => {
     const initApp = async () => {
@@ -169,6 +182,52 @@ export default function (props) {
 
   if (!bounty) return null;
 
+  const contributeToBounty = async () => {
+    let bountyTx;
+    let notificationId;
+    try {
+      notificationId = enqueueSnackbar(
+        "Complete your contribution in your wallet.",
+        {
+          autoHideDuration: 3000,
+        }
+      );
+
+      if (bounty.payMethod === "bst") {
+        await boostContract.methods
+          .approve(
+            "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+            Web3Utils.toWei(bounty.payAmount.toString())
+          )
+          .send({ from: accounts[0] });
+      }
+      /*
+      bountyTx = await makeBounty(
+        accounts[0],
+        contract,
+        "",
+        bounty.deadline,
+        Web3Utils.toWei(bounty.payAmount.toString()),
+        bounty.payMethod
+      );
+
+      const { _bountyId } = bountyTx.events.BountyIssued.returnValues;
+      enqueueSnackbar("Your bounty has been mined, bountId: " + _bountyId, {
+        variant: "success",
+        autoHideDuration: 3000,
+      });
+      */
+      // POST bounty data to backend
+    } catch (e) {
+      closeSnackbar(notificationId);
+      enqueueSnackbar("There was an error sending your transaction", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
+      console.log(e);
+    }
+  };
+
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
       <Modal
@@ -176,6 +235,7 @@ export default function (props) {
         handleClose={() => {
           setShowContribute(false);
         }}
+        onClick={contributeToBounty}
         title={"Increase the balance"}
         subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
       >
