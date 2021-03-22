@@ -163,13 +163,7 @@ export default function (props) {
   const [showContribute, setShowContribute] = useState(true);
   const currentDate = new Date().getTime();
 
-  const {
-    contract,
-    boostContract,
-    accounts,
-    initAppData,
-    networkId,
-  } = useContext(EthereumContext);
+  const { contract, boostContract, accounts } = useContext(EthereumContext);
 
   useEffect(() => {
     const initApp = async () => {
@@ -209,7 +203,9 @@ export default function (props) {
   sender,
   bountyId
 */
-
+      console.log("contract");
+      console.log(contract);
+      console.log(boostContract);
       bountyTx = await contributeToBounty(
         contract,
         Web3Utils.toWei(bounty.payAmount.toString()),
