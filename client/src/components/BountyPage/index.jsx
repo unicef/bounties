@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -17,8 +17,16 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import LinkIcon from "@material-ui/icons/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import TextField from "@material-ui/core/TextField";
+import EthereumContext from "../../context/EthereumContext";
+import contributeToBounty from "../../actions/contributeToBounty";
+import Modal from "../Modal";
 import "./markdown.scss";
+import { useSnackbar } from "notistack";
 
+const Web3Utils = require("web3-utils");
 const useStyles = makeStyles((theme) => ({
   root: {},
   title: {
@@ -124,6 +132,16 @@ const useStyles = makeStyles((theme) => ({
   capitalize: {
     textTransform: "uppercase",
   },
+  label: {
+    color: "#868e9c",
+    fontSize: 12,
+    paddingTop: "1rem",
+  },
+  textfield: {
+    backgroundColor: "#f8f9fb",
+    marginTop: ".5rem",
+    width: 280,
+  },
 }));
 
 function addressFormatter(address) {
@@ -139,14 +157,17 @@ function B({ children }) {
 
 export default function (props) {
   const classes = useStyles();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
+  const [showContribute, setShowContribute] = useState(true);
   const currentDate = new Date().getTime();
+
+  const { contract, boostContract, accounts } = useContext(EthereumContext);
 
   useEffect(() => {
     const initApp = async () => {
       const bounty = await getBounty(bountyId);
-      console.log("bounty");
       console.log(bounty);
       setBounty(bounty);
     };
@@ -155,8 +176,91 @@ export default function (props) {
 
   if (!bounty) return null;
 
+  const contribute = async () => {
+    let bountyTx;
+    let notificationId;
+    try {
+      notificationId = enqueueSnackbar(
+        "Complete your contribution in your wallet.",
+        {
+          autoHideDuration: 3000,
+        }
+      );
+
+      if (bounty.payMethod === "bst") {
+        boostContract.methods
+          .approve(
+            "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+            Web3Utils.toWei(bounty.payAmount.toString())
+          )
+          .send({ from: accounts[0] });
+      }
+
+      /*
+  contract,
+  valueInWei,
+  payMethod,
+  sender,
+  bountyId
+*/
+      console.log("contract");
+      console.log(contract);
+      console.log(boostContract);
+      bountyTx = await contributeToBounty(
+        contract,
+        Web3Utils.toWei(bounty.payAmount.toString()),
+        bounty.payMethod,
+        accounts[0],
+        bounty.bountyId
+      );
+
+      enqueueSnackbar("Your contribution has been made", {
+        variant: "success",
+        autoHideDuration: 3000,
+      });
+
+      // POST bounty data to backend
+    } catch (e) {
+      closeSnackbar(notificationId);
+      enqueueSnackbar("There was an error sending your transaction", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
+      console.log(e);
+    }
+  };
+
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
+      <Modal
+        open={showContribute}
+        handleClose={() => {
+          setShowContribute(false);
+        }}
+        onClick={contribute}
+        title={"Increase the balance"}
+        subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
+      >
+        <FormControl variant="outlined" className={classes.bountyTitle}>
+          <FormLabel
+            component="legend"
+            style={{
+              fontWeight: 400,
+            }}
+            className={classes.label}
+          >
+            Deposit amount ({bounty.payMethod.toUpperCase()})
+          </FormLabel>
+          <TextField
+            placeholder="Enter Amount"
+            color="secondary"
+            variant="outlined"
+            size="small"
+            label="Enter Amount..."
+            className={classes.textfield}
+          ></TextField>
+        </FormControl>
+      </Modal>
       <Grid container>
         <Grid item xs={12} style={{ marginBottom: "3.5rem" }}>
           <Grid container>
@@ -235,7 +339,12 @@ export default function (props) {
               <Hidden smUp>
                 <Grid item xs={12} md={4}>
                   <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
@@ -321,7 +430,12 @@ export default function (props) {
               <Hidden smDown>
                 <Grid item xs={12} md={4}>
                   <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
