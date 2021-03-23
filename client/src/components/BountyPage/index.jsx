@@ -160,7 +160,7 @@ export default function (props) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
-  const [showContribute, setShowContribute] = useState(true);
+  const [showContribute, setShowContribute] = useState(false);
   const currentDate = new Date().getTime();
 
   const { contract, boostContract, accounts } = useContext(EthereumContext);
