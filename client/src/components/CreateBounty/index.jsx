@@ -176,7 +176,7 @@ export default function (props) {
       });
 
       if (formData.payMethod === "bst") {
-        await boostContract.methods
+        boostContract.methods
           .approve(
             "0xCf72314350260DEc994587413fFAD56D7BF719d4",
             Web3Utils.toWei(formData.payAmount.toString())
