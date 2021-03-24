@@ -22,6 +22,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import EthereumContext from "../../context/EthereumContext";
 import contributeToBounty from "../../actions/contributeToBounty";
+import updateBounty from "../../actions/updateBounty";
 import Modal from "../Modal";
 import "./markdown.scss";
 import { useSnackbar } from "notistack";
@@ -179,7 +180,6 @@ export default function (props) {
   useEffect(() => {
     const initApp = async () => {
       const bounty = await getBounty(bountyId);
-      console.log(bounty);
       setBounty(bounty);
     };
     initApp();
@@ -192,7 +192,7 @@ export default function (props) {
       boostContract.methods
         .approve(
           "0xCf72314350260DEc994587413fFAD56D7BF719d4",
-          Web3Utils.toWei(bounty.payAmount.toString())
+          Web3Utils.toWei(contributeAmt)
         )
         .send({ from: accounts[0] });
     } catch (e) {
@@ -211,20 +211,15 @@ export default function (props) {
         }
       );
 
-      bountyTx = await contributeToBounty(
-        contract,
-        Web3Utils.toWei(contributeAmt.toString()),
-        bounty.payMethod,
-        accounts[0],
-        bounty.bountyId
-      );
-
       enqueueSnackbar("Your contribution has been made", {
         variant: "success",
         autoHideDuration: 3000,
       });
 
-      // POST bounty data to backend
+      await updateBounty({
+        ...bounty,
+        payAmount: parseFloat(bounty.payAmount) + parseFloat(contributeAmt),
+      });
     } catch (e) {
       closeSnackbar(notificationId);
       enqueueSnackbar("There was an error sending your transaction", {
