@@ -213,7 +213,7 @@ export default function (props) {
 
       bountyTx = await contributeToBounty(
         contract,
-        Web3Utils.toWei(bounty.payAmount.toString()),
+        Web3Utils.toWei(contributeAmt.toString()),
         bounty.payMethod,
         accounts[0],
         bounty.bountyId
