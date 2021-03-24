@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -142,6 +142,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: ".5rem",
     width: 280,
   },
+  approveBtn: {
+    marginTop: "1em",
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
 }));
 
 function addressFormatter(address) {
@@ -161,6 +171,7 @@ export default function (props) {
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
   const [showContribute, setShowContribute] = useState(false);
+  const [contributeAmt, setContributeAmt] = useState(0);
   const currentDate = new Date().getTime();
 
   const { contract, boostContract, accounts } = useContext(EthereumContext);
@@ -176,6 +187,19 @@ export default function (props) {
 
   if (!bounty) return null;
 
+  const approveToken = async () => {
+    try {
+      boostContract.methods
+        .approve(
+          "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+          Web3Utils.toWei(bounty.payAmount.toString())
+        )
+        .send({ from: accounts[0] });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const contribute = async () => {
     let bountyTx;
     let notificationId;
@@ -187,25 +211,6 @@ export default function (props) {
         }
       );
 
-      if (bounty.payMethod === "bst") {
-        boostContract.methods
-          .approve(
-            "0xCf72314350260DEc994587413fFAD56D7BF719d4",
-            Web3Utils.toWei(bounty.payAmount.toString())
-          )
-          .send({ from: accounts[0] });
-      }
-
-      /*
-  contract,
-  valueInWei,
-  payMethod,
-  sender,
-  bountyId
-*/
-      console.log("contract");
-      console.log(contract);
-      console.log(boostContract);
       bountyTx = await contributeToBounty(
         contract,
         Web3Utils.toWei(bounty.payAmount.toString()),
@@ -258,7 +263,19 @@ export default function (props) {
             size="small"
             label="Enter Amount..."
             className={classes.textfield}
+            defaultValue={contributeAmt}
+            onChange={(e) => {
+              setContributeAmt(e.target.value);
+            }}
           ></TextField>
+          {bounty.payMethod === "bst" && (
+            <Fragment>
+              <Button className={classes.approveBtn} onClick={approveToken}>
+                Approve BST
+              </Button>
+              <small>Approval Explanation Message</small>
+            </Fragment>
+          )}
         </FormControl>
       </Modal>
       <Grid container>
