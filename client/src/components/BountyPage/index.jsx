@@ -211,6 +211,14 @@ export default function (props) {
         }
       );
 
+      bountyTx = await contributeToBounty(
+        contract,
+        Web3Utils.toWei(contributeAmt.toString()),
+        bounty.payMethod,
+        accounts[0],
+        bounty.bountyId
+      );
+
       enqueueSnackbar("Your contribution has been made", {
         variant: "success",
         autoHideDuration: 3000,
