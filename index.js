@@ -160,6 +160,15 @@ class BountiesAdmin {
     return await this.db.models.Bounty(bounty).save();
   }
 
+  async updateBounty(bounty) {
+    this.logger.info(`Saving Bounty: ${bounty.title}`);
+
+    return await this.db.models.Bounty.findOneAndUpdate(
+      { _id: bounty._id },
+      bounty
+    );
+  }
+
   async getBounties() {
     this.logger.info(`Getting Bounties`);
 
