@@ -113,7 +113,22 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2.5rem",
     padding: "1rem",
   },
-
+  description: {
+    fontFamily: '"Inter",  sans-serif',
+    fontSize: 14,
+    height: 54,
+    marginTop: ".5rem",
+    backgroundColor: "#f8f9fb",
+    borderRadius: 6,
+    border: "solid 1px #e6e7ea",
+    width: "100%",
+    resize: "none",
+    padding: 8,
+    lineHeight: "22px",
+    "&:focus": {
+      outline: "none",
+    },
+  },
   metricsBot: {
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
@@ -141,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
   textfield: {
     backgroundColor: "#f8f9fb",
     marginTop: ".5rem",
-    width: 280,
+    width: "100%",
   },
   approveBtn: {
     marginTop: "1em",
@@ -172,6 +187,7 @@ export default function (props) {
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
   const [showContribute, setShowContribute] = useState(false);
+  const [showFulfill, setShowFulfill] = useState(false);
   const [contributeAmt, setContributeAmt] = useState(0);
   const currentDate = new Date().getTime();
 
@@ -199,6 +215,7 @@ export default function (props) {
       console.log(e);
     }
   };
+  const fulfill = async () => {};
 
   const contribute = async () => {
     let bountyTx;
@@ -230,8 +247,114 @@ export default function (props) {
     }
   };
 
-  return (
-    <Container maxWidth="md" style={{ padding: 0 }}>
+  function FulfillModal() {
+    return (
+      <Modal
+        open={showFulfill}
+        handleClose={() => {
+          setShowFulfill(false);
+        }}
+        onClick={fulfill}
+        title={"Enter Submission Details"}
+        subtitle={`Enter and submit the details for your bounty submission, including any links to content that may be required for fulfillment as indicated by the bounty description. You may format your submission description using Markdown.`}
+        btnText={"Submit"}
+      >
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Contact Name
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              className={classes.textfield}
+              style={{
+                paddingRight: "1em",
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Contact Email
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Web Link
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Attachment
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Description
+            </FormLabel>
+            <textarea className={classes.description}></textarea>
+          </Grid>
+          <Grid item xs={12} style={{ paddingTop: "2em" }}>
+            <i style={{ fontSize: 16, color: "#868e9c" }}>
+              All information entered here will be stored on the public Ethereum
+              network, and will be publicly displayed on the site.
+            </i>
+          </Grid>
+        </Grid>
+      </Modal>
+    );
+  }
+  function ContributeModal() {
+    return (
       <Modal
         open={showContribute}
         handleClose={() => {
@@ -240,6 +363,7 @@ export default function (props) {
         onClick={contribute}
         title={"Increase the balance"}
         subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
+        btnText={"Contribute"}
       >
         <FormControl variant="outlined" className={classes.bountyTitle}>
           <FormLabel
@@ -273,6 +397,14 @@ export default function (props) {
           )}
         </FormControl>
       </Modal>
+    );
+  }
+
+  return (
+    <Container maxWidth="md" style={{ padding: 0 }}>
+      <FulfillModal />
+      <ContributeModal />
+
       <Grid container>
         <Grid item xs={12} style={{ marginBottom: "3.5rem" }}>
           <Grid container>
@@ -350,7 +482,14 @@ export default function (props) {
             <Grid container>
               <Hidden smUp>
                 <Grid item xs={12} md={4}>
-                  <Button className={classes.fulfillButton}>Fulfill</Button>
+                  <Button
+                    className={classes.fulfillButton}
+                    onClick={() => {
+                      setShowFulfill(true);
+                    }}
+                  >
+                    Fulfill
+                  </Button>
                   <Button
                     className={classes.contributeButton}
                     onClick={() => {
@@ -441,7 +580,14 @@ export default function (props) {
               </Grid>
               <Hidden smDown>
                 <Grid item xs={12} md={4}>
-                  <Button className={classes.fulfillButton}>Fulfill</Button>
+                  <Button
+                    className={classes.fulfillButton}
+                    onClick={() => {
+                      setShowFulfill(true);
+                    }}
+                  >
+                    Fulfill
+                  </Button>
                   <Button
                     className={classes.contributeButton}
                     onClick={() => {
