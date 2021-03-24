@@ -132,6 +132,8 @@ class BountiesAdmin {
       }
     );
 
+    this.server.use("/*", express.static("./client/build"));
+
     this.logger.info(`Initialized`);
   }
 
