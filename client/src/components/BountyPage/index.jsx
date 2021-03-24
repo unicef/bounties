@@ -176,13 +176,12 @@ export default function (props) {
   const currentDate = new Date().getTime();
 
   const { contract, boostContract, accounts } = useContext(EthereumContext);
-
+  const initPage = async () => {
+    const bounty = await getBounty(bountyId);
+    setBounty(bounty);
+  };
   useEffect(() => {
-    const initApp = async () => {
-      const bounty = await getBounty(bountyId);
-      setBounty(bounty);
-    };
-    initApp();
+    initPage();
   }, []);
 
   if (!bounty) return null;
@@ -228,6 +227,8 @@ export default function (props) {
         ...bounty,
         payAmount: parseFloat(bounty.payAmount) + parseFloat(contributeAmt),
       });
+      initPage();
+      setShowContribute(false);
     } catch (e) {
       closeSnackbar(notificationId);
       enqueueSnackbar("There was an error sending your transaction", {
