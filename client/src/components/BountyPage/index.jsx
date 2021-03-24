@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
   description: {
     fontFamily: '"Inter",  sans-serif',
     fontSize: 14,
-    height: 54,
+    height: 108,
     marginTop: ".5rem",
     backgroundColor: "#f8f9fb",
     borderRadius: 6,
@@ -248,6 +248,27 @@ export default function (props) {
   };
 
   function FulfillModal() {
+    const [fulfillment, setFulfillment] = useState({
+      contactName: "",
+      contactEmail: "",
+      webLink: "",
+      attachment: "",
+      description: "",
+    });
+    const {
+      contactName,
+      contactEmail,
+      webLink,
+      attachment,
+      description,
+    } = fulfillment;
+
+    const handleUpdate = (e) => {
+      const { name, value } = e.target;
+      fulfillment[name] = value;
+      setFulfillment({ ...fulfillment });
+    };
+
     return (
       <Modal
         open={showFulfill}
@@ -274,6 +295,9 @@ export default function (props) {
               color="secondary"
               variant="outlined"
               size="small"
+              name="contactName"
+              onChange={handleUpdate}
+              defaultValue={contactName}
               className={classes.textfield}
               style={{
                 paddingRight: "1em",
@@ -294,6 +318,9 @@ export default function (props) {
               color="secondary"
               variant="outlined"
               size="small"
+              name="contactEmail"
+              onChange={handleUpdate}
+              defaultValue={contactEmail}
               className={classes.textfield}
             ></TextField>
           </Grid>
@@ -311,6 +338,9 @@ export default function (props) {
               color="secondary"
               variant="outlined"
               size="small"
+              name="webLink"
+              onChange={handleUpdate}
+              defaultValue={webLink}
               className={classes.textfield}
             ></TextField>
           </Grid>
@@ -328,6 +358,9 @@ export default function (props) {
               color="secondary"
               variant="outlined"
               size="small"
+              name="attachment"
+              onChange={handleUpdate}
+              defaultValue={attachment}
               className={classes.textfield}
             ></TextField>
           </Grid>
@@ -341,7 +374,12 @@ export default function (props) {
             >
               Description
             </FormLabel>
-            <textarea className={classes.description}></textarea>
+            <textarea
+              className={classes.description}
+              name="description"
+              onChange={handleUpdate}
+              defaultValue={description}
+            ></textarea>
           </Grid>
           <Grid item xs={12} style={{ paddingTop: "2em" }}>
             <i style={{ fontSize: 16, color: "#868e9c" }}>
