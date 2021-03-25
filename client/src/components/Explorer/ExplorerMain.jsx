@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
 import Grid from "@material-ui/core/Grid";
@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import TuneIcon from "@material-ui/icons/Tune";
 import BountyCard from "./BountyCard";
 import EthereumContext from "../../context/EthereumContext";
+import { useLocation } from 'react-router-dom'
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,67 +41,85 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ExplorerMain(props) {
   const classes = useStyles();
-  let { bounties, filters } = useContext(EthereumContext);
+  const location = useLocation();
+  console.log("location", location);
+  let { bounties, filters, accounts } = useContext(EthereumContext);
   console.log(bounties);
   console.log(filters);
+  console.log("accounts", accounts);
 
   bounties.forEach((bounty) => {
     bounty.timestamp = parseInt(bounty._id.toString().substring(0, 8), 16);
     bounty.timeLeft = bounty.deadline - new Date().getTime();
   });
-
   let displayBounties = [];
-  console.log(filters);
-  if (filters.difficulty.beginner) {
-    displayBounties = displayBounties.concat(
-      bounties.filter((bounty) => {
-        return bounty.difficulty === "beginner";
-      })
-    );
-  }
-
-  if (filters.difficulty.intermediate) {
-    displayBounties = displayBounties.concat(
-      bounties.filter((bounty) => {
-        return bounty.difficulty === "intermediate";
-      })
-    );
-  }
-
-  if (filters.difficulty.expert) {
-    displayBounties = displayBounties.concat(
-      bounties.filter((bounty) => {
-        return bounty.difficulty === "expert";
-      })
-    );
-  }
-
-  switch (filters.sort) {
-    case "recent":
-      displayBounties = displayBounties.sort((a, b) => {
-        return b.timestamp - a.timestamp;
+  if (location.pathname === "/profile" ){
+    if (props.toggleBarClicked === "created"){
+      displayBounties = bounties.filter((bounty) => {
+        console.log("creaaaaaaated");
+        return bounty.owner.toLowerCase()===accounts[0]?.toLowerCase();
       });
-      break;
-    case "value":
-      displayBounties = displayBounties.sort((a, b) => {
-        return b.payAmount - a.payAmount;
-      });
-      break;
-    case "expiry":
-      displayBounties = displayBounties.sort((a, b) => {
-        return a.timeLeft - b.timeLeft;
-      });
-      break;
-    case "viewed":
-      break;
-    default:
-      break;
-  }
+    }
 
-  if (filters.search) {
-    displayBounties = displayBounties.filter((bounty) => {
-      return bounty.title.indexOf(filters.search) >= 0;
-    });
+    else if (props.toggleBarClicked === "submitted"){
+      console.log("submitted");
+      displayBounties = [];
+    }
+
+  }
+  else{
+    console.log("bounties", bounties)
+    console.log(filters);
+    if (filters.difficulty.beginner) {
+      displayBounties = displayBounties.concat(
+          bounties.filter((bounty) => {
+            return bounty.difficulty === "beginner";
+          })
+      );
+    }
+
+    if (filters.difficulty.intermediate) {
+      displayBounties = displayBounties.concat(
+          bounties.filter((bounty) => {
+            return bounty.difficulty === "intermediate";
+          })
+      );
+    }
+
+    if (filters.difficulty.expert) {
+      displayBounties = displayBounties.concat(
+          bounties.filter((bounty) => {
+            return bounty.difficulty === "expert";
+          })
+      );
+    }
+
+    switch (filters.sort) {
+      case "recent":
+        displayBounties = displayBounties.sort((a, b) => {
+          return b.timestamp - a.timestamp;
+        });
+        break;
+      case "value":
+        displayBounties = displayBounties.sort((a, b) => {
+          return b.payAmount - a.payAmount;
+        });
+        break;
+      case "expiry":
+        displayBounties = displayBounties.sort((a, b) => {
+          return a.timeLeft - b.timeLeft;
+        });
+        break;
+      case "viewed":
+        break;
+      default:
+        break;
+    }
+    if (filters.search) {
+      displayBounties = displayBounties.filter((bounty) => {
+        return bounty.title.indexOf(filters.search) >= 0;
+      });
+    }
   }
 
   return (
@@ -108,7 +127,7 @@ export default function ExplorerMain(props) {
       <Grid item xs={12}>
         <Grid container className={classes.header}>
           <Grid item xs={6}>
-            <span className={classes.bountyCount}>{bounties.length || 0}</span>{" "}
+            <span className={classes.bountyCount}>{displayBounties.length || 0}</span>{" "}
             <span className={classes.bounties}>bounties</span>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
