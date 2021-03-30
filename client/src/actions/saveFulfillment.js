@@ -1,7 +1,7 @@
 export default async (fulfillment) => {
   let res, json;
   try {
-    res = await fetch(`/bounties/fulfill`, {
+    res = await fetch(`/bounties/fulfillment`, {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

@@ -22,6 +22,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import EthereumContext from "../../context/EthereumContext";
 import contributeToBounty from "../../actions/contributeToBounty";
+import makeFulfillment from "../../actions/makeFulfillment";
+import saveFulfillment from "../../actions/saveFulfillment";
 import FileUpload from "../FileUpload";
 import updateBounty from "../../actions/updateBounty";
 import Modal from "../Modal";
@@ -283,6 +285,21 @@ export default function (props) {
 
     const fulfill = async () => {
       console.log(fulfillment);
+      try {
+        await makeFulfillment(
+          accounts[0],
+          contract,
+          bountyId,
+          fulfillment.attachment
+        );
+        await saveFulfillment(fulfillment);
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+
+      // Post fulfillment
+      console.log("finished");
     };
 
     return (
