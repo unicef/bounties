@@ -119,7 +119,20 @@ class BountiesAdmin {
         res.json(req.file);
       }
     );
+    this.server.use(
+      "/upload/attachment",
+      isLoggedIn,
+      s3Upload.single("image"),
+      (req, res) => {
+        req.file.fileUrl = `/fulfillment/${req.file.key}`;
+        req.file.downloadUrl = `/fulfillment/${req.file.key}`;
+        res.json(req.file);
+      }
+    );
     this.server.use("/image/:key", isLoggedIn, (req, res) => {
+      s3Download(req.params.key).pipe(res);
+    });
+    this.server.use("/fulfillment/:key", isLoggedIn, (req, res) => {
       s3Download(req.params.key).pipe(res);
     });
     this.server.use("*", express.static("./client/build"));

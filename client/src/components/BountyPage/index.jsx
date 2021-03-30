@@ -22,6 +22,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import EthereumContext from "../../context/EthereumContext";
 import contributeToBounty from "../../actions/contributeToBounty";
+import FileUpload from "../FileUpload";
 import updateBounty from "../../actions/updateBounty";
 import Modal from "../Modal";
 import "./markdown.scss";
@@ -168,6 +169,17 @@ const useStyles = makeStyles((theme) => ({
       color: "#ffffff",
     },
   },
+  uploadBtn: {
+    float: "right",
+    marginTop: "1em",
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
 }));
 
 function addressFormatter(address) {
@@ -215,7 +227,6 @@ export default function (props) {
       console.log(e);
     }
   };
-  const fulfill = async () => {};
 
   const contribute = async () => {
     let bountyTx;
@@ -265,8 +276,13 @@ export default function (props) {
 
     const handleUpdate = (e) => {
       const { name, value } = e.target;
+
       fulfillment[name] = value;
       setFulfillment({ ...fulfillment });
+    };
+
+    const fulfill = async () => {
+      console.log(fulfillment);
     };
 
     return (
@@ -355,14 +371,31 @@ export default function (props) {
               Attachment
             </FormLabel>
             <TextField
+              disabled={true}
               color="secondary"
               variant="outlined"
               size="small"
-              name="attachment"
-              onChange={handleUpdate}
-              defaultValue={attachment}
+              value={attachment}
               className={classes.textfield}
             ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FileUpload
+              url={"/upload/attachment"}
+              name={"attachment"}
+              afterUpload={(data) => {
+                console.log(data);
+                console.log({
+                  target: { name: "attachment", value: data.fileUrl },
+                });
+                handleUpdate({
+                  target: { name: "attachment", value: data.fileUrl },
+                });
+              }}
+              style={{ float: "right" }}
+            >
+              <Button className={classes.uploadBtn}>Upload Attachment</Button>
+            </FileUpload>
           </Grid>
           <Grid item xs={12}>
             <FormLabel
