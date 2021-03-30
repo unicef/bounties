@@ -76,6 +76,6 @@ contract("StandardBounties", (accounts) => {
       fulfillment.fulfillers,
       fulfillment.data
     );
-    expect(fulfillmentId).to.be.equal(0);
+    expect(fulfillmentId.toNumber()).to.be.equal(0);
   });
 });
