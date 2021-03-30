@@ -448,11 +448,12 @@ contract StandardBounties {
     public
     senderIsValid(_sender)
     validateBountyArrayIndex(_bountyId)
+    returns(uint)
   {
     require(now < bounties[_bountyId].deadline); // Submissions are only allowed to be made before the deadline
     require(_fulfillers.length > 0); // Submissions with no fulfillers would mean no one gets paid out
 
-    bounties[_bountyId].fulfillments.push(Fulfillment(_fulfillers, _sender));
+    return bounties[_bountyId].fulfillments.push(Fulfillment(_fulfillers, _sender));
 
     emit BountyFulfilled(_bountyId,
                          (bounties[_bountyId].fulfillments.length - 1),
