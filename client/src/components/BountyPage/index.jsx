@@ -284,22 +284,28 @@ export default function (props) {
     };
 
     const fulfill = async () => {
-      console.log(fulfillment);
+      let tx;
       try {
-        await makeFulfillment(
+        tx = await makeFulfillment(
           accounts[0],
           contract,
           bountyId,
           fulfillment.attachment
         );
-        await saveFulfillment(fulfillment);
+        const { _fulfillmentId } = tx.events.BountyFulfilled.returnValues;
+        await saveFulfillment({
+          ...fulfillment,
+          owner: accounts[0],
+          fulfillers: [accounts[0]],
+          bountyId,
+          fulfillmentId: _fulfillmentId,
+        });
       } catch (e) {
         console.log(e);
         return;
       }
 
       // Post fulfillment
-      console.log("finished");
     };
 
     return (

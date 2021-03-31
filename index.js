@@ -167,6 +167,13 @@ class BountiesAdmin {
     process.exit();
   }
 
+  async saveFulfillment(fulfillment) {
+    this.logger.info(
+      `Saving Fulfillment, bountyId: ${fulfillment.bountyId} fulfillmentId: ${fulfillment.fulfillmentId}`
+    );
+
+    return await this.db.models.Fulfillment(fulfillment).save();
+  }
   async saveBounty(bounty) {
     this.logger.info(`Saving Bounty: ${bounty.title}`);
 
