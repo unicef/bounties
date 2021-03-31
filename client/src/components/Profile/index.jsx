@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Profile(props) {
   const classes = useStyles();
-  const [filterOpen, setFilterOpen] = useState(false);
 
   return <div className={classes.container}></div>;
 }

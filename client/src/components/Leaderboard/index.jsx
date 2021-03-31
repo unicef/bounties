@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "4em",
   },
 }));
-export default function Dashboard(props) {
+export default function Leaderboard(props) {
   const classes = useStyles();
 
   return <div className={classes.container}></div>;
