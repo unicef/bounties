@@ -99,9 +99,13 @@ export default function BountiesAdmin() {
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = BountiesContract.networks[networkId];
+      console.log(networkId);
+      console.log(deployedNetwork);
+      console.log(BountiesContract);
+      console.log(BountiesContract.networks);
       const instance = new web3.eth.Contract(
         BountiesContract.abi,
-        deployedNetwork && deployedNetwork.address
+        "0xCf72314350260DEc994587413fFAD56D7BF719d4"
       );
       const BoostInstance = new web3.eth.Contract(
         ERC20Token.abi,

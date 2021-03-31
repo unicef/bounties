@@ -6,3 +6,4 @@ admin/logger.log
 ./logger.log
 logger.log
 client/node_modules/
+.idea/

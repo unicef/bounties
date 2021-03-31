@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -104,6 +104,16 @@ const useStyles = makeStyles((theme) => ({
       color: "#ffffff",
     },
   },
+  approveBtn: {
+    marginTop: "1em",
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+    marginRight: 36,
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
   label: {
     color: "#868e9c",
     fontSize: 12,
@@ -125,9 +135,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function (props) {
   const classes = useStyles();
-  const { contract, accounts, initAppData, networkId } = useContext(
-    EthereumContext
-  );
+  const {
+    contract,
+    boostContract,
+    accounts,
+    initAppData,
+    networkId,
+  } = useContext(EthereumContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = React.useState({
@@ -162,6 +176,19 @@ export default function (props) {
     activate,
     categories,
   } = formData;
+
+  const approveToken = async () => {
+    try {
+      console.log(
+        boostContract.methods
+          .approve(
+            "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+            Web3Utils.toWei(formData.payAmount.toString())
+          )
+          .send({ from: accounts[0] })
+      );
+    } catch (e) {}
+  };
 
   const createBounty = async () => {
     let bountyTx;
@@ -707,7 +734,7 @@ export default function (props) {
               <Grid item xs={12}>
                 <Divider className={classes.divider} />
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={3} style={{ minHeight: 500 }}>
                 <p className={classes.formTitle}>Payout</p>
               </Grid>
               <Grid item xs={12} md={9}>
@@ -776,6 +803,17 @@ export default function (props) {
                         onChange={handleFormChange}
                         className={classes.textfield}
                       ></TextField>
+                      {payMethod === "bst" && (
+                        <Fragment>
+                          <Button
+                            className={classes.approveBtn}
+                            onClick={approveToken}
+                          >
+                            Approve BST
+                          </Button>
+                          <small>Approval Explanation Message</small>
+                        </Fragment>
+                      )}
                     </FormControl>
                   </Grid>
                 </Grid>

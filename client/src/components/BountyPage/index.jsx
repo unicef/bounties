@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -17,8 +17,20 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import LinkIcon from "@material-ui/icons/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import TextField from "@material-ui/core/TextField";
+import EthereumContext from "../../context/EthereumContext";
+import contributeToBounty from "../../actions/contributeToBounty";
+import makeFulfillment from "../../actions/makeFulfillment";
+import saveFulfillment from "../../actions/saveFulfillment";
+import FileUpload from "../FileUpload";
+import updateBounty from "../../actions/updateBounty";
+import Modal from "../Modal";
 import "./markdown.scss";
+import { useSnackbar } from "notistack";
 
+const Web3Utils = require("web3-utils");
 const useStyles = makeStyles((theme) => ({
   root: {},
   title: {
@@ -104,7 +116,22 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2.5rem",
     padding: "1rem",
   },
-
+  description: {
+    fontFamily: '"Inter",  sans-serif',
+    fontSize: 14,
+    height: 108,
+    marginTop: ".5rem",
+    backgroundColor: "#f8f9fb",
+    borderRadius: 6,
+    border: "solid 1px #e6e7ea",
+    width: "100%",
+    resize: "none",
+    padding: 8,
+    lineHeight: "22px",
+    "&:focus": {
+      outline: "none",
+    },
+  },
   metricsBot: {
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
@@ -124,6 +151,37 @@ const useStyles = makeStyles((theme) => ({
   capitalize: {
     textTransform: "uppercase",
   },
+  label: {
+    color: "#868e9c",
+    fontSize: 12,
+    paddingTop: "1rem",
+  },
+  textfield: {
+    backgroundColor: "#f8f9fb",
+    marginTop: ".5rem",
+    width: "100%",
+  },
+  approveBtn: {
+    marginTop: "1em",
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
+  uploadBtn: {
+    float: "right",
+    marginTop: "1em",
+    backgroundColor: "#4d94ff",
+    color: "#ffffff",
+
+    "&:hover": {
+      backgroundColor: "#3d84ff",
+      color: "#ffffff",
+    },
+  },
 }));
 
 function addressFormatter(address) {
@@ -139,23 +197,317 @@ function B({ children }) {
 
 export default function (props) {
   const classes = useStyles();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { bountyId } = useParams();
   const [bounty, setBounty] = useState(null);
+  const [showContribute, setShowContribute] = useState(false);
+  const [showFulfill, setShowFulfill] = useState(false);
+  const [contributeAmt, setContributeAmt] = useState(0);
   const currentDate = new Date().getTime();
 
+  const { contract, boostContract, accounts } = useContext(EthereumContext);
+  const initPage = async () => {
+    const bounty = await getBounty(bountyId);
+    setBounty(bounty);
+  };
   useEffect(() => {
-    const initApp = async () => {
-      const bounty = await getBounty(bountyId);
-      console.log(bounty);
-      setBounty(bounty);
-    };
-    initApp();
+    initPage();
   }, []);
 
   if (!bounty) return null;
 
+  const approveToken = async () => {
+    try {
+      boostContract.methods
+        .approve(
+          "0xCf72314350260DEc994587413fFAD56D7BF719d4",
+          Web3Utils.toWei(contributeAmt)
+        )
+        .send({ from: accounts[0] });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const contribute = async () => {
+    let bountyTx;
+    let notificationId;
+    try {
+      notificationId = enqueueSnackbar(
+        "Complete your contribution in your wallet.",
+        {
+          autoHideDuration: 3000,
+        }
+      );
+
+      bountyTx = await contributeToBounty(
+        contract,
+        Web3Utils.toWei(contributeAmt.toString()),
+        bounty.payMethod,
+        accounts[0],
+        bounty.bountyId
+      );
+
+      enqueueSnackbar("Your contribution has been made", {
+        variant: "success",
+        autoHideDuration: 3000,
+      });
+
+      await updateBounty({
+        ...bounty,
+        payAmount: parseFloat(bounty.payAmount) + parseFloat(contributeAmt),
+      });
+      initPage();
+      setShowContribute(false);
+    } catch (e) {
+      closeSnackbar(notificationId);
+      enqueueSnackbar("There was an error sending your transaction", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
+      console.log(e);
+    }
+  };
+
+  function FulfillModal() {
+    const [fulfillment, setFulfillment] = useState({
+      contactName: "",
+      contactEmail: "",
+      webLink: "",
+      attachment: "",
+      description: "",
+    });
+    const {
+      contactName,
+      contactEmail,
+      webLink,
+      attachment,
+      description,
+    } = fulfillment;
+
+    const handleUpdate = (e) => {
+      const { name, value } = e.target;
+
+      fulfillment[name] = value;
+      setFulfillment({ ...fulfillment });
+    };
+
+    const fulfill = async () => {
+      let tx;
+      try {
+        tx = await makeFulfillment(
+          accounts[0],
+          contract,
+          bountyId,
+          fulfillment.attachment
+        );
+        const { _fulfillmentId } = tx.events.BountyFulfilled.returnValues;
+        await saveFulfillment({
+          ...fulfillment,
+          owner: accounts[0],
+          fulfillers: [accounts[0]],
+          bountyId,
+          fulfillmentId: _fulfillmentId,
+        });
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+
+      setShowFulfill(false);
+    };
+
+    return (
+      <Modal
+        open={showFulfill}
+        handleClose={() => {
+          setShowFulfill(false);
+        }}
+        onClick={fulfill}
+        title={"Enter Submission Details"}
+        subtitle={`Enter and submit the details for your bounty submission, including any links to content that may be required for fulfillment as indicated by the bounty description. You may format your submission description using Markdown.`}
+        btnText={"Submit"}
+      >
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Contact Name
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              name="contactName"
+              onChange={handleUpdate}
+              defaultValue={contactName}
+              className={classes.textfield}
+              style={{
+                paddingRight: "1em",
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Contact Email
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              name="contactEmail"
+              onChange={handleUpdate}
+              defaultValue={contactEmail}
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Web Link
+            </FormLabel>
+            <TextField
+              color="secondary"
+              variant="outlined"
+              size="small"
+              name="webLink"
+              onChange={handleUpdate}
+              defaultValue={webLink}
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Attachment
+            </FormLabel>
+            <TextField
+              disabled={true}
+              color="secondary"
+              variant="outlined"
+              size="small"
+              value={attachment}
+              className={classes.textfield}
+            ></TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <FileUpload
+              url={"/upload/attachment"}
+              name={"attachment"}
+              afterUpload={(data) => {
+                console.log(data);
+                console.log({
+                  target: { name: "attachment", value: data.fileUrl },
+                });
+                handleUpdate({
+                  target: { name: "attachment", value: data.fileUrl },
+                });
+              }}
+              style={{ float: "right" }}
+            >
+              <Button className={classes.uploadBtn}>Upload Attachment</Button>
+            </FileUpload>
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              component="legend"
+              style={{
+                fontWeight: 400,
+              }}
+              className={classes.label}
+            >
+              Description
+            </FormLabel>
+            <textarea
+              className={classes.description}
+              name="description"
+              onChange={handleUpdate}
+              defaultValue={description}
+            ></textarea>
+          </Grid>
+          <Grid item xs={12} style={{ paddingTop: "2em" }}>
+            <i style={{ fontSize: 16, color: "#868e9c" }}>
+              All information entered here will be stored on the public Ethereum
+              network, and will be publicly displayed on the site.
+            </i>
+          </Grid>
+        </Grid>
+      </Modal>
+    );
+  }
+  function ContributeModal() {
+    return (
+      <Modal
+        open={showContribute}
+        handleClose={() => {
+          setShowContribute(false);
+        }}
+        onClick={contribute}
+        title={"Increase the balance"}
+        subtitle={`Indicate the amount you would like to contribute towards the bounty (${bounty.payMethod.toUpperCase()})`}
+        btnText={"Contribute"}
+      >
+        <FormControl variant="outlined" className={classes.bountyTitle}>
+          <FormLabel
+            component="legend"
+            style={{
+              fontWeight: 400,
+            }}
+            className={classes.label}
+          >
+            Deposit amount ({bounty.payMethod.toUpperCase()})
+          </FormLabel>
+          <TextField
+            placeholder="Enter Amount"
+            color="secondary"
+            variant="outlined"
+            size="small"
+            label="Enter Amount..."
+            className={classes.textfield}
+            defaultValue={contributeAmt}
+            onChange={(e) => {
+              setContributeAmt(e.target.value);
+            }}
+          ></TextField>
+          {bounty.payMethod === "bst" && (
+            <Fragment>
+              <Button className={classes.approveBtn} onClick={approveToken}>
+                Approve BST
+              </Button>
+              <small>Approval Explanation Message</small>
+            </Fragment>
+          )}
+        </FormControl>
+      </Modal>
+    );
+  }
+
   return (
     <Container maxWidth="md" style={{ padding: 0 }}>
+      <FulfillModal />
+      <ContributeModal />
+
       <Grid container>
         <Grid item xs={12} style={{ marginBottom: "3.5rem" }}>
           <Grid container>
@@ -233,8 +585,20 @@ export default function (props) {
             <Grid container>
               <Hidden smUp>
                 <Grid item xs={12} md={4}>
-                  <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.fulfillButton}
+                    onClick={() => {
+                      setShowFulfill(true);
+                    }}
+                  >
+                    Fulfill
+                  </Button>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
@@ -290,17 +654,9 @@ export default function (props) {
                         <div style={{ marginBottom: ".5rem" }}>
                           <div style={{ display: "flex", clear: "both" }}>
                             <span style={{ marginTop: 2, marginRight: 4 }}>
-                              <AttachmentIcon fontSize="small" />
-                            </span>
-                            Attachment
-                          </div>
-                        </div>
-                        <div style={{ marginBottom: ".5rem" }}>
-                          <div style={{ display: "flex", clear: "both" }}>
-                            <span style={{ marginTop: 2, marginRight: 4 }}>
                               <LinkIcon fontSize="small" />
                             </span>
-                            link
+                            {bounty.weblink}
                           </div>
                         </div>
 
@@ -309,7 +665,7 @@ export default function (props) {
                             <span style={{ marginTop: 0, marginRight: 4 }}>
                               <MailOutlineIcon />
                             </span>
-                            Email
+                            {bounty.contactEmail}
                           </div>
                         </div>
                       </div>
@@ -327,8 +683,20 @@ export default function (props) {
               </Grid>
               <Hidden smDown>
                 <Grid item xs={12} md={4}>
-                  <Button className={classes.fulfillButton}>Fulfill</Button>
-                  <Button className={classes.contributeButton}>
+                  <Button
+                    className={classes.fulfillButton}
+                    onClick={() => {
+                      setShowFulfill(true);
+                    }}
+                  >
+                    Fulfill
+                  </Button>
+                  <Button
+                    className={classes.contributeButton}
+                    onClick={() => {
+                      setShowContribute(true);
+                    }}
+                  >
                     Contribute
                   </Button>
 
@@ -384,17 +752,14 @@ export default function (props) {
                         <div style={{ marginBottom: ".5rem" }}>
                           <div style={{ display: "flex", clear: "both" }}>
                             <span style={{ marginTop: 2, marginRight: 4 }}>
-                              <AttachmentIcon fontSize="small" />
-                            </span>
-                            Attachment
-                          </div>
-                        </div>
-                        <div style={{ marginBottom: ".5rem" }}>
-                          <div style={{ display: "flex", clear: "both" }}>
-                            <span style={{ marginTop: 2, marginRight: 4 }}>
                               <LinkIcon fontSize="small" />
                             </span>
-                            link
+                            <a
+                              href={bounty.weblink}
+                              style={{ textDecoration: "none" }}
+                            >
+                              {bounty.weblink}
+                            </a>
                           </div>
                         </div>
 
@@ -403,7 +768,12 @@ export default function (props) {
                             <span style={{ marginTop: 0, marginRight: 4 }}>
                               <MailOutlineIcon />
                             </span>
-                            Email
+                            <a
+                              href={`mailto:${bounty.contactEmail}`}
+                              style={{ textDecoration: "none" }}
+                            >
+                              {bounty.contactEmail}
+                            </a>
                           </div>
                         </div>
                       </div>

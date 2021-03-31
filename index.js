@@ -5,7 +5,6 @@ const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const passportCustom = require("passport-custom");
 const CustomStrategy = passportCustom.Strategy;
-
 const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const { Logger } = require("node-core-utils");
@@ -22,7 +21,7 @@ const {
   s3Upload,
   s3Download,
 } = require("./lib/middleware");
-const { LoginRoutes, BountiesRoutes } = require("./lib/routes");
+const { LoginRoutes, BountiesRoutes, AccountRoutes } = require("./lib/routes");
 
 const defaultConfig = require("./config");
 const loginTokenCache = new lru(defaultConfig.loginTokenCacheOptions);
@@ -109,6 +108,33 @@ class BountiesAdmin {
     this.server.use("/profile", express.static("./client/build"));
     this.server.use("/login", LoginRoutes);
     this.server.use("/bounties", BountiesRoutes);
+    this.server.use("/account", AccountRoutes);
+    this.server.use(
+      "/upload/image",
+      isLoggedIn,
+      s3Upload.single("image"),
+      (req, res) => {
+        req.file.imageUrl = `/image/${req.file.key}`;
+        req.file.downloadUrl = `/download/${req.file.key}`;
+        res.json(req.file);
+      }
+    );
+    this.server.use(
+      "/upload/attachment",
+      isLoggedIn,
+      s3Upload.single("image"),
+      (req, res) => {
+        req.file.fileUrl = `/fulfillment/${req.file.key}`;
+        req.file.downloadUrl = `/fulfillment/${req.file.key}`;
+        res.json(req.file);
+      }
+    );
+    this.server.use("/image/:key", isLoggedIn, (req, res) => {
+      s3Download(req.params.key).pipe(res);
+    });
+    this.server.use("/fulfillment/:key", isLoggedIn, (req, res) => {
+      s3Download(req.params.key).pipe(res);
+    });
     this.server.use("*", express.static("./client/build"));
 
     this.server.post(
@@ -118,6 +144,8 @@ class BountiesAdmin {
         res.send(req.session.passport.user.address);
       }
     );
+
+    this.server.use("/*", express.static("./client/build"));
 
     this.logger.info(`Initialized`);
   }
@@ -139,10 +167,26 @@ class BountiesAdmin {
     process.exit();
   }
 
+  async saveFulfillment(fulfillment) {
+    this.logger.info(
+      `Saving Fulfillment, bountyId: ${fulfillment.bountyId} fulfillmentId: ${fulfillment.fulfillmentId}`
+    );
+
+    return await this.db.models.Fulfillment(fulfillment).save();
+  }
   async saveBounty(bounty) {
     this.logger.info(`Saving Bounty: ${bounty.title}`);
 
     return await this.db.models.Bounty(bounty).save();
+  }
+
+  async updateBounty(bounty) {
+    this.logger.info(`Saving Bounty: ${bounty.title}`);
+
+    return await this.db.models.Bounty.findOneAndUpdate(
+      { _id: bounty._id },
+      bounty
+    );
   }
 
   async getBounties() {
@@ -155,6 +199,21 @@ class BountiesAdmin {
     this.logger.info(`Getting Bounty ${bountyId}`);
 
     return await this.db.models.Bounty.findOne({ bountyId });
+  }
+
+  async saveAccount(account) {
+    this.logger.info(`Saving account: ${account.address}`);
+
+    return await this.db.models.AccountSettings.findOneAndUpdate(
+      { address: account.address },
+      account,
+      { upsert: true, new: true }
+    );
+  }
+  async getAccountByAddress(address) {
+    this.logger.info(`Getting account: ${address}`);
+
+    return await this.db.models.AccountSettings.findOne({ address });
   }
 }
 

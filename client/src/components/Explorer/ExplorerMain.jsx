@@ -41,8 +41,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ExplorerMain(props) {
   const classes = useStyles();
   let { bounties, filters } = useContext(EthereumContext);
-  console.log(bounties);
-  console.log(filters);
 
   bounties.forEach((bounty) => {
     bounty.timestamp = parseInt(bounty._id.toString().substring(0, 8), 16);
@@ -50,7 +48,7 @@ export default function ExplorerMain(props) {
   });
 
   let displayBounties = [];
-  console.log(filters);
+
   if (filters.difficulty.beginner) {
     displayBounties = displayBounties.concat(
       bounties.filter((bounty) => {
@@ -67,7 +65,15 @@ export default function ExplorerMain(props) {
     );
   }
 
-  if (filters.difficulty.expert) {
+  if (filters.difficulty.advanced) {
+    displayBounties = displayBounties.concat(
+      bounties.filter((bounty) => {
+        return bounty.difficulty === "expert";
+      })
+    );
+  }
+
+  if (filters.difficulty.advanced) {
     displayBounties = displayBounties.concat(
       bounties.filter((bounty) => {
         return bounty.difficulty === "expert";
@@ -103,12 +109,48 @@ export default function ExplorerMain(props) {
     });
   }
 
+  if (filters.category) {
+    displayBounties = displayBounties.filter((bounty) => {
+      return bounty.categories.includes(filters.category);
+    });
+  }
+
+  const activeBounties = displayBounties.filter((bounty) => {
+    return bounty.timeLeft > 0;
+  });
+  const completeBounties = displayBounties.filter((bounty) => {
+    // return bounty.timeLeft < 0 && bounty.amountPaid > 0
+    return false;
+  });
+  const expiredBounties = displayBounties.filter((bounty) => {
+    return bounty.timeLeft < 0;
+  });
+  const deadBounties = displayBounties.filter((bounty) => {
+    return false;
+  });
+
+  displayBounties = [];
+  if (filters.stage.active) {
+    displayBounties = displayBounties.concat(activeBounties);
+  }
+  if (filters.stage.complete) {
+    displayBounties = displayBounties.concat(completeBounties);
+  }
+  if (filters.stage.expired) {
+    displayBounties = displayBounties.concat(expiredBounties);
+  }
+  if (filters.stage.dead) {
+    displayBounties = displayBounties.concat(deadBounties);
+  }
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12}>
         <Grid container className={classes.header}>
           <Grid item xs={6}>
-            <span className={classes.bountyCount}>{bounties.length || 0}</span>{" "}
+            <span className={classes.bountyCount}>
+              {displayBounties.length || 0}
+            </span>{" "}
             <span className={classes.bounties}>bounties</span>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
