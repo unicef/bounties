@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
     width: "100%",
-    maxWidth: 480,
+    maxWidth: 600,
     backgroundColor: theme.palette.background.paper,
     borderRadius: 8,
     padding: theme.spacing(2, 4, 3),
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleModal({
   title,
   subtitle,
+  btnText,
   open,
   handleClose,
   children,
@@ -99,7 +100,7 @@ export default function SimpleModal({
             className={classes.filledButton}
             onClick={onClick}
           >
-            Contribute
+            {btnText}
           </Button>
         </Grid>
       </Grid>
