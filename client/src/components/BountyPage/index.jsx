@@ -305,7 +305,7 @@ export default function (props) {
         return;
       }
 
-      // Post fulfillment
+      setShowFulfill(false);
     };
 
     return (
