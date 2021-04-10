@@ -12,7 +12,7 @@ $ npm install
 ## Requirements
 
 To save the data that is not stored on Ethereum, Bounties requires a running mongodb service. AWS S3 is used to store/serve files.
-The following Environmental variables are required 
+The following Environmental variables are required. An ```.env-example``` file has been included in the repository. Rename this file to ```.env``` and paste the following environmental variables to get started.
 
 ```
 NODE_ENV=development
@@ -28,6 +28,12 @@ ALCHEMY_ENDPOINT=
 ```
 
 App configuration is located in   `/config/index.js`
+
+## Setting up Mongodb
+Depending on your operating system, you need to set up mongodb. 
+Below is a link with information on how to set up mongodb locally on your machine
+
+https://docs.mongodb.com/manual/administration/install-community/
 
 ## Startup
 
