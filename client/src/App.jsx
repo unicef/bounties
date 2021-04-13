@@ -13,6 +13,8 @@ import { SnackbarProvider } from "notistack";
 import getLoginToken from "./actions/getLoginToken";
 import verifyLoginToken from "./actions/verifyLoginToken";
 import getBounties from "./actions/getBounties";
+import { Web3ReactProvider } from '@web3-react/core'
+import {Web3Provider} from "ethers/providers";
 
 const ethUtil = require("ethereumjs-util");
 const sigUtil = require("eth-sig-util");
@@ -37,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
+
+function getLibrary(provider) {
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
+}
 
 export default function BountiesAdmin() {
   const classes = useStyles();
@@ -87,7 +95,7 @@ export default function BountiesAdmin() {
     },
   });
 
-  const initWeb3 = async () => {
+  const initWeb3 = async (library= null, chainId = null, account = null) => {
     try {
       // Get network provider and web3 instance.
 
@@ -96,8 +104,13 @@ export default function BountiesAdmin() {
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
+      let networkId;
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
+      if(chainId){
+        networkId = chainId;
+      } else if(web3){
+        networkId = await web3.eth.net.getId();
+      }
       const deployedNetwork = BountiesContract.networks[networkId];
       console.log(networkId);
       console.log(deployedNetwork);
@@ -122,11 +135,10 @@ export default function BountiesAdmin() {
 */
       // Login
       const token = await getLoginToken();
-      const eth = new Eth(web3.currentProvider);
       const message = ethUtil.bufferToHex(
         new Buffer(`Your login nonce is: ${token}`, "utf8")
       );
-      const sig = await eth.personal_sign(message, accounts[0]);
+      const sig = await  library.getSigner(account).signMessage('👋');
 
       try {
         const res = await verifyLoginToken(sig, token);
@@ -168,41 +180,43 @@ export default function BountiesAdmin() {
   }, []);
 
   return (
-    <div className={classes.root}>
-      <ThemeProvider theme={theme}>
-        <EthereumContext.Provider
-          value={{
-            loggedIn,
-            bounties,
-            initWeb3,
-            networkId,
-            web3,
-            contract,
-            boostContract,
-            accounts,
-            filters,
-            setFilters,
-            initAppData,
-          }}
-        >
-          <SnackbarProvider
-            maxSnack={3}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <CssBaseline>
-              <Router>
-                <Layout
-                  pageIndex={pageIndex}
-                  setPageIndex={setPageIndex}
-                ></Layout>
-              </Router>
-            </CssBaseline>
-          </SnackbarProvider>
-        </EthereumContext.Provider>
-      </ThemeProvider>
-    </div>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <div className={classes.root}>
+          <ThemeProvider theme={theme}>
+            <EthereumContext.Provider
+                value={{
+                  loggedIn,
+                  bounties,
+                  initWeb3,
+                  networkId,
+                  web3,
+                  contract,
+                  boostContract,
+                  accounts,
+                  filters,
+                  setFilters,
+                  initAppData,
+                }}
+            >
+              <SnackbarProvider
+                  maxSnack={3}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+              >
+                <CssBaseline>
+                  <Router>
+                    <Layout
+                        pageIndex={pageIndex}
+                        setPageIndex={setPageIndex}
+                    ></Layout>
+                  </Router>
+                </CssBaseline>
+              </SnackbarProvider>
+            </EthereumContext.Provider>
+          </ThemeProvider>
+        </div>
+      </Web3ReactProvider>
   );
 }
