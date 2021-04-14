@@ -19,6 +19,7 @@ import Privacy from "../Privacy";
 import TermsOfService from "../TOS";
 import BountyPage from "../BountyPage";
 import AccountSettings from "../AccountSettings";
+import Leaderboard from '../Leaderboard';
 
 export default function Layout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -45,7 +46,7 @@ export default function Layout(props) {
         </Route>
         <Route exact path="/leaderboard">
           <MainBackground>
-            <div>leaderboard</div>
+            <Leaderboard />
           </MainBackground>
         </Route>
         <Route exact path="/profile">

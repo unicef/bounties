@@ -1,0 +1,82 @@
+@import '../../styles/variables.scss';
+.leaderboard{
+  width: 100%;
+  text-align: center;
+  &__item {
+    display: grid;
+    width: 100%;
+    border-bottom: 1px solid #f2f4f8;
+    grid-template-columns: 50px 1fr 200px;
+    align-items: center;
+    &--content{
+      display: flex;
+      flex-direction: row;
+      .profile{
+        margin: 1em;
+        width: 50px;
+        height: 50px;
+        background: rgb(214, 214, 214);
+        border-radius: 50%;
+        img{
+          width: 50px;
+          height: auto;
+          border-radius: 50%;
+        }
+      }
+      .address{
+        &__name{
+          margin: 0;
+          padding-top: 1.5rem;
+          font-size: 0.9rem;
+          font-weight: 500;
+          line-height: 1;
+        }
+        &__value{
+          margin: 0;
+          color: $brand-blue;
+          font-size: 0.9rem;
+          font-weight: 400;
+        }
+      }
+    }
+    &--value{
+      justify-self: end;
+      font-size: 1.25rem;
+      color: $brand-purple;
+    }
+  }
+  .MuiList-padding {
+    padding: 1.5rem !important;
+  }
+}
+
+.heading{
+  font-size: 1.5rem;
+  color: white;
+  text-align: center;
+}
+.action{
+  width: max-content;
+  margin: 0 auto;
+}
+
+.panel{
+  width: 100%;
+  margin: 3rem auto;
+  padding: 0 48px;
+  min-height: 25rem;
+  max-height: 70vh;
+  .MuiPaper-root{
+    min-height: 25rem;
+    max-height: 70vh;
+    overflow: hidden;
+    overflow-y: scroll;
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+}
+
+.list{
+  display: flex;
+  flex-direction: column;
+}

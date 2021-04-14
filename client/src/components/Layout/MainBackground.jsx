@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     position: "absolute",
     width: "100%",
-    paddingTop: "4rem",
+    paddingTop: "1rem",
   },
 }));
 export default function Main(props) {
