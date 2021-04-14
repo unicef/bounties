@@ -27,6 +27,14 @@ INFURA_ENDPOINT=
 ALCHEMY_ENDPOINT=
 ```
 
+To configure the network connector to the mainnet and rinkeby, the following environment variables are needed:
+
+```
+REACT_APP_RPC_URL_4=
+REACT_APP_RPC_URL_1=
+```
+These variables must be located in `/client/.env`
+
 App configuration is located in   `/config/index.js`
 
 ## Startup
