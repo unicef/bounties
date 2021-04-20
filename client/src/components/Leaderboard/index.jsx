@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '-2.5rem',
     '@media (max-width: 767px)' : {
       borderRadius: '0',
+      padding: '0.25rem',
     }
   },
   listWrap: {
