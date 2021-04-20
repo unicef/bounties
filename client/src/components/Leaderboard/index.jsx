@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
   panel: {
     marginTop: '4rem',
+    padding:'0 24px',
+    '@media (max-width: 767px)' : {
+      padding: '0'
+    }
   },
   heading: {
     lineHeight: '1.3',
@@ -65,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
     marginBottom: '2rem',
     marginTop: '-2.5rem',
+    '@media (max-width: 767px)' : {
+      borderRadius: '0',
+    }
   },
   listWrap: {
     display: 'flex',
@@ -100,6 +107,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline',
     color: '#5b29c7',
     fontWeight: '400',
+    fontSize:'1.25rem',
     '@media (min-width: 35em)': {
       fontSize: '1.25rem',
     }
