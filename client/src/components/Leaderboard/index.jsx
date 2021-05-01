@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   panel: {
+    maxWidth: '60rem',
+    margin: '0 auto',
     marginTop: '4rem',
     padding:'0 24px',
     '@media (max-width: 767px)' : {
@@ -60,8 +62,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   paper: {
-    maxWidth: '60rem',
-    margin: '0 auto',
+    
     padding: '1.5rem',
     minHeight: '25rem',
     maxHeight: '70vh',
