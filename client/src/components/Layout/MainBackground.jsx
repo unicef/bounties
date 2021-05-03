@@ -11,9 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
   gradient: {
     background: "linear-gradient(45deg, #754dcb, #4d94ff)",
-    height: 200,
+    height: 256,
     position: "absolute",
     width: "100%",
+    paddingBottom: "4rem",
   },
   content: {
     position: "absolute",
