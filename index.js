@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "./.env" });
 const express = require("express");
 const session = require("express-session");
+const AWS = require("aws-sdk");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const passportCustom = require("passport-custom");
@@ -22,9 +23,12 @@ const {
   s3Download,
 } = require("./lib/middleware");
 const { LoginRoutes, BountiesRoutes, AccountRoutes } = require("./lib/routes");
+const { params } = require("./lib/email/index");
 
 const defaultConfig = require("./config");
 const loginTokenCache = new lru(defaultConfig.loginTokenCacheOptions);
+const AWS_SES = new AWS.SES(defaultConfig.SESConfig);
+const amazonSES = AWS_SES.sendEmail(params).promise();
 
 class BountiesAdmin {
   constructor(config) {
@@ -45,6 +49,7 @@ class BountiesAdmin {
     this.eth = new Eth(new Eth.HttpProvider(this.config.alchemyUrl));
     this.sigUtil = sigUtil;
     this.ethUtil = ethUtil;
+    this.email = amazonSES;
 
     this.passport.use(
       "signature-verification",
@@ -101,6 +106,7 @@ class BountiesAdmin {
     this.server.set("eth", this.eth);
     this.server.set("ethUtil", this.ethUtil);
     this.server.set("sigUtil", this.sigUtil);
+    this.server.set("sendEmail", this.email);
     this.server.use(logRequest);
     this.server.use("/", express.static("./client/build"));
     this.server.use("/explorer", express.static("./client/build"));

@@ -36,4 +36,9 @@ module.exports = {
     },
     maxAge: 2 * oneDay,
   },
+  SESConfig: {
+    apiVersiom: '2021-04-21',
+    accessKeyId: process.env.AWS_SES_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SES_SECRET_KEY,
+}
 };
