@@ -1,4 +1,5 @@
 # Bounties Explorer
+
 Bounties Explorer is a UNICEF maintained fork of Bounties.network.
 
 ## Installation
@@ -12,7 +13,7 @@ $ npm install
 ## Requirements
 
 To save the data that is not stored on Ethereum, Bounties requires a running mongodb service. AWS S3 is used to store/serve files.
-The following Environmental variables are required 
+The following Environmental variables are required
 
 ```
 NODE_ENV=development
@@ -33,9 +34,10 @@ To configure the network connector to the mainnet and rinkeby, the following env
 REACT_APP_RPC_URL_4=
 REACT_APP_RPC_URL_1=
 ```
+
 These variables must be located in `/client/.env`
 
-App configuration is located in   `/config/index.js`
+App configuration is located in `/config/index.js`
 
 ## Startup
 
@@ -58,7 +60,7 @@ $ npm run start
 ```
 
 ## Contributions
+
 Please Fork this repo, pull down & set your fork as origin with this repository as upstream. To make Pull Requests, push your change branch to your repo and open a PR here. [See more](https://github.com/unicef/juniper-portfolio/tree/develop/contributing)
 
-
-
+This repository is managed by UNICEF's blockchain team
