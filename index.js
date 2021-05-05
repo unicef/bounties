@@ -166,7 +166,12 @@ class BountiesAdmin {
     await this.db.disconnect();
     process.exit();
   }
-
+  async saveLeaderboard(leaderboard) {
+    this.logger.info(
+      `Saving Leaderboard ${ leaderboard.leaderboardType } data`
+    );
+    return await this.db.models.Leaderboard(leaderboard).save();
+  }
   async saveFulfillment(fulfillment) {
     this.logger.info(
       `Saving Fulfillment, bountyId: ${fulfillment.bountyId} fulfillmentId: ${fulfillment.fulfillmentId}`
